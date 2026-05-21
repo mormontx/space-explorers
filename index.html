@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Voyager | Interactive Celestial Explorer</title>
+    <meta name="description" content="Embark on an interactive journey through space. Discover stars, planets, comets, and asteroids, simulate stellar formation, and explore speculative alien life.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Background Canvas for Starfield -->
+    <canvas id="starfield-canvas"></canvas>
+
+    <!-- Navigation Header -->
+    <header class="main-header glass-panel">
+        <div class="logo">
+            <span class="logo-icon">✦</span>
+            <h1>COSMIC VOYAGER</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="#encyclopedia" class="nav-item active" id="nav-link-encyclopedia">Encyclopedia</a>
+            <a href="#formation-lab" class="nav-item" id="nav-link-formation">Formation Lab</a>
+            <a href="#exoplanets" class="nav-item" id="nav-link-exoplanets">Exoplanet Biomes</a>
+            <a href="#orbit-playground" class="nav-item" id="nav-link-orbit">Trajectory Sandbox</a>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section" id="hero">
+            <div class="hero-content">
+                <h2 class="glitch-text" data-text="EXPLORE THE UNIVERSE">EXPLORE THE UNIVERSE</h2>
+                <p class="hero-subtitle">An interactive sandbox of stellar evolution, planetary accretion, and the speculative biology of distant worlds.</p>
+                <div class="hero-actions">
+                    <a href="#encyclopedia" class="cta-btn glass-btn">Enter Sandbox</a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span>Scroll to descend</span>
+                <div class="mouse">
+                    <div class="wheel"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Celestial Encyclopedia -->
+        <section class="section glass-section" id="encyclopedia">
+            <div class="section-header">
+                <span class="section-tag">Database</span>
+                <h2>Celestial Encyclopedia</h2>
+                <p>Select a cosmic body to inspect its structure, properties, and role in the cosmic ecosystem.</p>
+            </div>
+
+            <div class="tabs-container">
+                <div class="tab-list glass-panel" role="tablist">
+                    <button class="tab-btn active" id="tab-star" role="tab" aria-selected="true">Star</button>
+                    <button class="tab-btn" id="tab-planet" role="tab" aria-selected="false">Planet</button>
+                    <button class="tab-btn" id="tab-comet" role="tab" aria-selected="false">Comet</button>
+                    <button class="tab-btn" id="tab-asteroid" role="tab" aria-selected="false">Asteroid</button>
+                    <button class="tab-btn" id="tab-meteoroid" role="tab" aria-selected="false">Meteoroid/Meteorite</button>
+                </div>
+
+                <div class="tab-panels">
+                    <!-- Star Panel -->
+                    <div class="tab-panel active" id="panel-star" role="tabpanel">
+                        <div class="panel-grid">
+                            <div class="panel-visual">
+                                <div class="celestial-wrapper">
+                                    <div class="celestial-body star-glowing"></div>
+                                    <div class="flare-1"></div>
+                                    <div class="flare-2"></div>
+                                </div>
+                            </div>
+                            <div class="panel-info">
+                                <span class="badge red-badge">Fusion Core</span>
+                                <h3>The Engine of the Cosmos</h3>
+                                <p>Stars are luminous spheres of plasma held together by their own gravity. They initiate nuclear fusion in their cores, converting hydrogen into helium and emitting immense energy that powers planetary systems.</p>
+                                <div class="fact-grid">
+                                    <div class="fact-card">
+                                        <span class="fact-val">15M °C</span>
+                                        <span class="fact-lbl">Core Temp</span>
+                                    </div>
+                                    <div class="fact-card">
+                                        <span class="fact-val">99.8%</span>
+                                        <span class="fact-lbl">Solar System Mass</span>
+                                    </div>
+                                </div>
+                                <div class="panel-cta">
+                                    <a href="#formation-lab" class="inline-btn" id="go-to-star-form">Simulate Star Formation →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Planet Panel -->
+                    <div class="tab-panel" id="panel-planet" role="tabpanel">
+                        <div class="panel-grid">
+                            <div class="panel-visual">
+                                <div class="celestial-wrapper">
+                                    <div class="celestial-body planet-rocky">
+                                        <div class="planet-shadow"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-info">
+                                <span class="badge blue-badge">Hydrostatic Equilibrium</span>
+                                <h3>Worlds of Rock and Gas</h3>
+                                <p>Planets form from the protoplanetary disks surrounding young stars. To be classified as a planet, a body must be spherical due to its own gravity, orbit a star, and have cleared its orbital path of other debris.</p>
+                                <div class="fact-grid">
+                                    <div class="fact-card">
+                                        <span class="fact-val">2 Types</span>
+                                        <span class="fact-lbl">Terrestrial & Jovian</span>
+                                    </div>
+                                    <div class="fact-card">
+                                        <span class="fact-val">4.5 B Yrs</span>
+                                        <span class="fact-lbl">Average Age</span>
+                                    </div>
+                                </div>
+                                <div class="panel-cta">
+                                    <a href="#formation-lab" class="inline-btn" id="go-to-planet-form">Simulate Accretion →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comet Panel -->
+                    <div class="tab-panel" id="panel-comet" role="tabpanel">
+                        <div class="panel-grid">
+                            <div class="panel-visual">
+                                <div class="celestial-wrapper">
+                                    <div class="comet-body">
+                                        <div class="comet-head"></div>
+                                        <div class="comet-tail-gas"></div>
+                                        <div class="comet-tail-dust"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-info">
+                                <span class="badge ice-badge">Dirty Snowballs</span>
+                                <h3>Icy Cosmic Wanderers</h3>
+                                <p>Comets are cosmic snowballs of frozen gases, rock, and dust orbiting the Sun in highly eccentric trajectories. When approaching the Sun, they heat up and release gas and dust, forming a glowing coma and two distinct tails (ion and dust) pointing away from the Sun.</p>
+                                <div class="fact-grid">
+                                    <div class="fact-card">
+                                        <span class="fact-val">-220 °C</span>
+                                        <span class="fact-lbl">Average Temp</span>
+                                    </div>
+                                    <div class="fact-card">
+                                        <span class="fact-val">2 Tails</span>
+                                        <span class="fact-lbl">Ion & Dust Tails</span>
+                                    </div>
+                                </div>
+                                <div class="panel-cta">
+                                    <a href="#orbit-playground" class="inline-btn">View Comet Trajectory →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Asteroid Panel -->
+                    <div class="tab-panel" id="panel-asteroid" role="tabpanel">
+                        <div class="panel-grid">
+                            <div class="panel-visual">
+                                <div class="celestial-wrapper">
+                                    <div class="asteroid-body">
+                                        <div class="crater" style="top: 20%; left: 30%; width: 12px; height: 12px;"></div>
+                                        <div class="crater" style="top: 55%; left: 60%; width: 18px; height: 18px;"></div>
+                                        <div class="crater" style="top: 40%; left: 15%; width: 8px; height: 8px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-info">
+                                <span class="badge grey-badge">Rocky Remnants</span>
+                                <h3>Building Blocks of Planets</h3>
+                                <p>Asteroids are rocky, metallic, airless remnants left over from the early formation of our solar system about 4.6 billion years ago. Most reside within the vast Asteroid Belt between Mars and Jupiter.</p>
+                                <div class="fact-grid">
+                                    <div class="fact-card">
+                                        <span class="fact-val">1M+</span>
+                                        <span class="fact-lbl">Known Asteroids</span>
+                                    </div>
+                                    <div class="fact-card">
+                                        <span class="fact-val">No Air</span>
+                                        <span class="fact-lbl">Atmosphere</span>
+                                    </div>
+                                </div>
+                                <div class="panel-cta">
+                                    <a href="#orbit-playground" class="inline-btn">Observe Orbit Belts →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Meteoroid/Meteorite Panel -->
+                    <div class="tab-panel" id="panel-meteoroid" role="tabpanel">
+                        <div class="panel-grid">
+                            <div class="panel-visual">
+                                <div class="meteoroid-stages">
+                                    <div class="stage-col">
+                                        <div class="stage-icon meteoroid-icon">☄️</div>
+                                        <h4>Meteoroid</h4>
+                                        <p>A small chunk of rock/debris in space.</p>
+                                    </div>
+                                    <div class="stage-arrow">➔</div>
+                                    <div class="stage-col">
+                                        <div class="stage-icon meteor-icon">🔥</div>
+                                        <h4>Meteor</h4>
+                                        <p>Burns in the atmosphere (shooting star).</p>
+                                    </div>
+                                    <div class="stage-arrow">➔</div>
+                                    <div class="stage-col">
+                                        <div class="stage-icon meteorite-icon">🪨</div>
+                                        <h4>Meteorite</h4>
+                                        <p>Survives entry and impacts the ground.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-info">
+                                <span class="badge atmospheric-badge">Debris Cycle</span>
+                                <h3>The Atmospheric Journey</h3>
+                                <p>These terms describe the same object at different points in its path. A <strong>Meteoroid</strong> is a small rock floating in space. When it enters a planet's atmosphere and vaporizes, creating a flash of light, it is a <strong>Meteor</strong>. If it manages to survive the atmospheric friction and strikes the ground, it is called a <strong>Meteorite</strong>.</p>
+                                <div class="fact-grid">
+                                    <div class="fact-card">
+                                        <span class="fact-val">20 km/s</span>
+                                        <span class="fact-lbl">Entry Speed</span>
+                                    </div>
+                                    <div class="fact-card">
+                                        <span class="fact-val">1,600 °C</span>
+                                        <span class="fact-lbl">Friction Heat</span>
+                                    </div>
+                                </div>
+                                <div class="panel-cta">
+                                    <button class="inline-btn launch-demo-btn" id="trigger-play-meteor">Simulate Atmospheric Entry ↓</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Cosmic Formation Lab -->
+        <section class="section glass-section" id="formation-lab">
+            <div class="section-header">
+                <span class="section-tag">Simulations</span>
+                <h2>Cosmic Formation Lab</h2>
+                <p>Interact with real-time physics simulations demonstrating the structural birth of stars and planetary systems.</p>
+            </div>
+
+            <div class="lab-switcher glass-panel">
+                <button class="lab-btn active" id="lab-star-btn">Star Formation (Collapse)</button>
+                <button class="lab-btn" id="lab-planet-btn">Planet Accretion (Protoplanetary Disk)</button>
+            </div>
+
+            <div class="lab-container">
+                <!-- Star Formation Canvas Block -->
+                <div class="lab-content active" id="lab-star-content">
+                    <div class="canvas-wrapper">
+                        <canvas id="star-formation-canvas"></canvas>
+                        <div class="hud-overlay" id="star-hud">
+                            <div class="hud-stat">CORE TEMP: <span id="star-temp">1,200</span> K</div>
+                            <div class="hud-stat">DENSITY: <span id="star-density">1.2</span> × 10<sup>-19</sup> g/cm³</div>
+                            <div class="hud-stat">STAGE: <span id="star-stage">Molecular Cloud</span></div>
+                        </div>
+                    </div>
+                    <div class="lab-controls glass-panel">
+                        <h3>Gravitational Collapse</h3>
+                        <p class="control-desc">A star forms when massive clouds of cold molecular gas and interstellar dust undergo gravitational collapse. When the density and temperature reach extreme levels, nuclear fusion ignites.</p>
+                        
+                        <div class="timeline-stepper">
+                            <div class="step-indicator current" id="star-step-1">1. Cloud</div>
+                            <div class="step-indicator" id="star-step-2">2. Protostar</div>
+                            <div class="step-indicator" id="star-step-3">3. Fusion</div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="control-btn primary-glow" id="star-trigger-btn">Compress Gas Cloud</button>
+                            <button class="control-btn" id="star-reset-btn">Reset Cloud</button>
+                        </div>
+                        <div class="science-note glass-panel">
+                            <strong>Astro Physics Info:</strong> Gravitational potential energy is converted to thermal energy during contraction, causing the protostar core to glow in the infrared spectrum before fusion starts.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Planet Formation Canvas Block -->
+                <div class="lab-content" id="lab-planet-content">
+                    <div class="canvas-wrapper">
+                        <canvas id="planet-formation-canvas"></canvas>
+                        <div class="hud-overlay" id="planet-hud">
+                            <div class="hud-stat">PLANETESIMALS: <span id="planet-count">0</span></div>
+                            <div class="hud-stat">DISK DUST: <span id="planet-dust">100%</span></div>
+                            <div class="hud-stat">ORBIT CLEARANCE: <span id="planet-cleared">0%</span></div>
+                        </div>
+                    </div>
+                    <div class="lab-controls glass-panel">
+                        <h3>Planetary Accretion</h3>
+                        <p class="control-desc">Planets coalesce from the leftovers of star formation. Electrostatic forces make tiny dust grains stick together, building up planetesimals. Eventually, gravity takes over, sweeping the orbit clean.</p>
+
+                        <div class="timeline-stepper">
+                            <div class="step-indicator current" id="planet-step-1">1. Nebula Disk</div>
+                            <div class="step-indicator" id="planet-step-2">2. Accretion</div>
+                            <div class="step-indicator" id="planet-step-3">3. Orbit Clear</div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="control-btn primary-glow" id="planet-trigger-btn">Accrete Particles</button>
+                            <button class="control-btn" id="planet-reset-btn">Reset Disk</button>
+                        </div>
+                        <div class="science-note glass-panel">
+                            <strong>Astro Physics Info:</strong> Heavy elements (silicates, iron) accrete close to the star forming rocky planets, while lighter volatiles (water, methane) freeze out further away, creating gas/ice giants.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Exoplanets & Astrobiology -->
+        <section class="section glass-section" id="exoplanets">
+            <div class="section-header">
+                <span class="section-tag">Astrobiology</span>
+                <h2>Exoplanet Worlds & Life Forms</h2>
+                <p>Discover worlds beyond our solar system and explore speculative anatomical adaptations of life suited to survive their extreme environments.</p>
+            </div>
+
+            <div class="exoplanet-layout">
+                <!-- Left: Exoplanet Cards List -->
+                <div class="exoplanet-selector-grid">
+                    <!-- Super Earth -->
+                    <div class="exoplanet-card active glass-panel" data-biome="super-earth">
+                        <div class="card-glow"></div>
+                        <h4>Giga-Gravity (Super-Earth)</h4>
+                        <p>Massive rocky world with 3x Earth's gravity, dense atmospheric pressures, and thick crushing oceans.</p>
+                        <div class="metric-row">
+                            <span>Gravity: 3.2g</span>
+                            <span>Atmosphere: 5 atm</span>
+                        </div>
+                    </div>
+
+                    <!-- Ocean World -->
+                    <div class="exoplanet-card glass-panel" data-biome="ocean-world">
+                        <div class="card-glow"></div>
+                        <h4>Sub-Glacial Ocean</h4>
+                        <p>A frozen global ocean covered in ice kilometers thick, warmed only by hydro-thermal vents at the seabed.</p>
+                        <div class="metric-row">
+                            <span>Ice Crust: 15 km</span>
+                            <span>Water Depth: 120 km</span>
+                        </div>
+                    </div>
+
+                    <!-- Tidally Locked -->
+                    <div class="exoplanet-card glass-panel" data-biome="locked-desert">
+                        <div class="card-glow"></div>
+                        <h4>Tidally Locked (Eyeball Planet)</h4>
+                        <p>One hemisphere permanently faces its star (scorching desert); the other faces deep space (glacial ice sheets).</p>
+                        <div class="metric-row">
+                            <span>Scorched: 180°C</span>
+                            <span>Frozen: -110°C</span>
+                        </div>
+                    </div>
+
+                    <!-- Gas Giant -->
+                    <div class="exoplanet-card glass-panel" data-biome="gas-giant">
+                        <div class="card-glow"></div>
+                        <h4>Gas Giant (Upper Atmosphere)</h4>
+                        <p>Violent winds and storms in a hydrogen-helium atmosphere with no solid surface.</p>
+                        <div class="metric-row">
+                            <span>Wind Speed: 800m/s</span>
+                            <span>Pressure: Variable</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Astrobiology Specimen Visualizer -->
+                <div class="specimen-visualizer glass-panel">
+                    <div class="visualizer-header">
+                        <h3>Specimen Laboratory</h3>
+                        <span class="pulse-indicator">LIVE RENDER</span>
+                    </div>
+                    
+                    <div class="visualizer-body">
+                        <!-- Canvas for drawing speculative animated creatures -->
+                        <canvas id="astrobiology-canvas"></canvas>
+                        
+                        <div class="specimen-overlay glass-panel" id="specimen-details">
+                            <h4 id="specimen-name">Giga-Tardigrade</h4>
+                            <p id="specimen-description">Flattened, segmented body with skeletal hydraulic legs to distribute massive gravitational loads. Utilizes silicon-carbon polymers to prevent cellular collapse under high pressure.</p>
+                            <div class="adaptation-list">
+                                <h5>Adaptation Markers:</h5>
+                                <ul id="specimen-adaptations">
+                                    <li>Low profile profile to minimize vertical gravitational drag.</li>
+                                    <li>Thick carbon-nanotube reinforced exoskeleton.</li>
+                                    <li>Anaerobic glycolysis powered by iron reduction.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Trajectory Sandbox -->
+        <section class="section glass-section" id="orbit-playground">
+            <div class="section-header">
+                <span class="section-tag">Sandbox</span>
+                <h2>Trajectory Sandbox</h2>
+                <p>Observe the orbital dynamics of solar objects. Launch meteoroids to visualize the path and heat transformations of meteors and meteorites.</p>
+            </div>
+
+            <div class="sandbox-container">
+                <div class="canvas-wrapper sandbox-canvas-wrapper">
+                    <canvas id="orbit-canvas"></canvas>
+                    <div class="orbit-legend">
+                        <div class="legend-item"><span class="legend-dot color-star"></span> Star</div>
+                        <div class="legend-item"><span class="legend-dot color-planet"></span> Planet</div>
+                        <div class="legend-item"><span class="legend-dot color-comet"></span> Comet (Elliptical + Tail)</div>
+                        <div class="legend-item"><span class="legend-dot color-asteroid"></span> Asteroid (Belt)</div>
+                        <div class="legend-item"><span class="legend-dot color-meteoroid"></span> Meteoroid / Meteor / Impact</div>
+                    </div>
+                </div>
+
+                <div class="sandbox-sidebar glass-panel">
+                    <h3>Simulation Controls</h3>
+                    <p class="sidebar-info">Our sandbox displays the visual differences in celestial paths. Comets travel in extreme orbits, creating sublimation tails as they approach solar warmth, while asteroids occupy stable belts.</p>
+                    
+                    <div class="control-box">
+                        <label for="speed-slider">Simulation Speed</label>
+                        <input type="range" id="speed-slider" min="0.5" max="3" step="0.1" value="1">
+                        <span class="range-value"><span id="speed-val">1.0</span>x</span>
+                    </div>
+
+                    <div class="btn-group-vertical">
+                        <button class="control-btn primary-glow" id="btn-launch-meteor">Launch Meteoroid</button>
+                        <button class="control-btn" id="btn-reset-sandbox">Reset Trajectories</button>
+                    </div>
+
+                    <div class="event-log glass-panel">
+                        <h4>Atmospheric Events</h4>
+                        <div class="log-entries" id="event-log-container">
+                            <div class="log-entry system-entry">Sandbox initialized. Celestial orbits stable.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>&copy; 2026 Cosmic Voyager. Built for educators, dreamers, and explorers of the final frontier.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
