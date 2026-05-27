@@ -1,460 +1,934 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Voyager | Interactive Celestial Explorer</title>
-    <meta name="description" content="Embark on an interactive journey through space. Discover stars, planets, comets, and asteroids, simulate stellar formation, and explore speculative alien life.">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Space Explorers — An interactive Space Science journey from star birth to black holes. Explore the cosmos with simulations, animations, and mind-blowing questions.">
+  <title>Space Frenzy — Journey Through the Cosmos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=11">
+
+<style>
+  .arcade-leaderboard {
+    margin: 10px auto;
+    padding: 10px;
+    background: #000;
+    border: 4px solid #ffb6c1;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #ffb6c1, inset 0 0 15px #ffb6c1;
+    text-align: center;
+    font-family: 'Press Start 2P', monospace;
+    max-width: 450px;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .arcade-title {
+    color: #ff0;
+    text-shadow: 2px 2px 0 #ffb6c1;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    animation: blink 1s step-start infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .arcade-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .arcade-table th {
+    color: #f0f;
+    padding-bottom: 15px;
+    border-bottom: 2px dashed #555;
+  }
+  .arcade-table td {
+    padding: 10px 0;
+  }
+  .arcade-table td:nth-child(2) {
+    text-align: right;
+    padding-right: 20px;
+  }
+  .arcade-table td:nth-child(3) {
+    text-align: left;
+  }
+</style>
+
 </head>
 <body>
-    <!-- Background Canvas for Starfield -->
-    <canvas id="starfield-canvas"></canvas>
 
-    <!-- Navigation Header -->
-    <header class="main-header glass-panel">
-        <div class="logo">
-            <span class="logo-icon">✦</span>
-            <h1>COSMIC VOYAGER</h1>
+  <!-- ===================== STARFIELD BACKGROUND ===================== -->
+  <canvas id="starfield-canvas" aria-hidden="true"></canvas>
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <nav id="main-nav" class="pixel-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <span class="nav-logo">[*]</span>
+      <span class="nav-title">SPACE EXPLORERS</span>
+    </div>
+    <button id="nav-toggle" class="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul id="nav-links" class="nav-links">
+      <li><a href="#" id="about-nav-link" class="nav-link">ABOUT</a></li>
+      <li><a href="#hero" class="nav-link active">HOME</a></li>
+      <li><a href="#intro" class="nav-link">INTRO</a></li>
+      <li><a href="#why-dark" class="nav-link">DARKNESS</a></li>
+      <li><a href="#star-lifecycle" class="nav-link">STARS</a></li>
+      <li><a href="#planet-formation" class="nav-link">PLANETS</a></li>
+      <li><a href="#planet-dig" class="nav-link">DIG IT!</a></li>
+      <li><a href="#galaxies" class="nav-link">GALAXIES</a></li>
+      <li><a href="#space-objects" class="nav-link">OBJECTS</a></li>
+      <li><a href="#orbit-sim" class="nav-link">ORBITS</a></li>
+      <li><a href="#big-bang-interactive" class="nav-link">ORIGINS</a></li>
+      <li><a href="#black-hole" class="nav-link">BLACK HOLES</a></li>
+      <li><a href="#alien-life" class="nav-link" style="color: var(--pixel-green);">EXOPLANETS</a></li>
+      <li><a href="#mind-blowing" class="nav-link">BIG Q's</a></li>
+      <li><a href="#flight-test" class="nav-link" style="color: var(--pixel-yellow);">SPACE FRENZY</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===================== HERO SECTION ===================== -->
+  <section id="hero" class="section hero-section">
+    <div class="hero-content fade-in">
+      <h1 class="hero-title">
+        <span class="hero-line">JOURNEY THROUGH</span>
+        <span class="hero-line" style="color: #ffb6c1; text-shadow: 4px 4px 0 #cc0033;">THE COSMOS</span>
+      </h1>
+      <p class="hero-subtitle">An interactive exploration of space -- from the birth of stars to the mysteries of black holes</p>
+      <div class="hero-badges">
+        <span class="badge">[ SPACE SCIENCE ]</span>
+        <span class="badge">[ INTERACTIVE SIMS ]</span>
+        <span class="badge">[ MIND-BLOWING FACTS ]</span>
+      </div>
+      <a href="#intro" class="cta-button" id="start-journey-btn">
+        BEGIN YOUR JOURNEY &gt;&gt;
+      </a>
+    </div>
+    <div class="scroll-indicator" aria-hidden="true">
+      <span class="scroll-text">SCROLL TO EXPLORE</span>
+      <div class="scroll-arrow">V</div>
+    </div>
+  </section>
+
+  <!-- ===================== INTRO ===================== -->
+  <section id="intro" class="section content-section">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// THE BASICS</span>
+        <h2 class="section-title">WHAT IS SPACE?</h2>
+        <p class="section-subtitle">Before we dive deep, let's get our definitions straight.</p>
+      </div>
+
+      <div class="content-grid three-col fade-in">
+        <div class="pixel-card mini-card">
+          <img src="assets/pixel_star.png" alt="Star pixel art" class="intro-image">
+          <h3>STAR</h3>
+          <p>A giant ball of superhot gas (plasma) held together by its own gravity. It is so massive that the pressure in its core causes nuclear fusion, which releases massive amounts of energy and light. Our Sun is a star!</p>
         </div>
-        <nav class="nav-links">
-            <a href="#encyclopedia" class="nav-item active" id="nav-link-encyclopedia">Encyclopedia</a>
-            <a href="#formation-lab" class="nav-item" id="nav-link-formation">Formation Lab</a>
-            <a href="#exoplanets" class="nav-item" id="nav-link-exoplanets">Exoplanet Biomes</a>
-            <a href="#orbit-playground" class="nav-item" id="nav-link-orbit">Trajectory Sandbox</a>
-        </nav>
-    </header>
+        <div class="pixel-card mini-card">
+          <img src="assets/pixel_planet.png" alt="Planet pixel art" class="intro-image">
+          <h3>PLANET</h3>
+          <p>A large celestial body that orbits a star. Unlike stars, planets don't produce their own light (they reflect the star's light). They have cleared their orbit of other debris and have enough gravity to be round.</p>
+        </div>
+        <div class="pixel-card mini-card">
+          <img src="assets/pixel_galaxy.png" alt="Galaxy pixel art" class="intro-image">
+          <h3>GALAXY</h3>
+          <p>A massive, gravitationally bound system that contains stars, stellar remnants, interstellar gas, dust, and dark matter. Our solar system is just one tiny speck inside the Milky Way galaxy, which contains billions of stars!</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Main Container -->
-    <main>
-        <!-- Hero Section -->
-        <section class="hero-section" id="hero">
-            <div class="hero-content">
-                <h2 class="glitch-text" data-text="EXPLORE THE UNIVERSE">EXPLORE THE UNIVERSE</h2>
-                <p class="hero-subtitle">An interactive sandbox of stellar evolution, planetary accretion, and the speculative biology of distant worlds.</p>
-                <div class="hero-actions">
-                    <a href="#encyclopedia" class="cta-btn glass-btn">Enter Sandbox</a>
+  <!-- ===================== WHY IS SPACE DARK? ===================== -->
+  <section id="why-dark" class="section content-section">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// THE FIRST BIG QUESTION</span>
+        <h2 class="section-title">WHY IS SPACE DARK?</h2>
+      </div>
+      <div class="content-grid two-col fade-in">
+        <div class="pixel-card info-card">
+          <div class="card-icon">[SUN]</div>
+          <h3>OLBERS' PARADOX</h3>
+          <p>If the universe is infinite and full of stars, why isn't the night sky blazing with light? This puzzle baffled scientists for centuries!</p>
+          <div class="fact-highlight">
+            <strong>The Answer:</strong> The universe isn't infinitely old. Light from the most distant stars hasn't had time to reach us yet -- the universe is only <span class="accent-text">13.8 billion years old</span>.
+          </div>
+        </div>
+        <div class="pixel-card info-card">
+          <div class="card-icon">[RED]</div>
+          <h3>REDSHIFT &amp; EXPANSION</h3>
+          <p>The universe is expanding! As space stretches, the light from distant stars gets stretched too -- shifting from visible light to invisible infrared and microwave radiation.</p>
+          <div class="fact-highlight">
+            <strong>Fun Fact:</strong> The leftover glow from the Big Bang, called the <span class="accent-text">Cosmic Microwave Background</span>, fills all of space -- we just can't see it with our eyes!
+          </div>
+        </div>
+      </div>
+      <div class="visual-demo fade-in">
+        <div class="wavelength-demo" id="wavelength-demo">
+          <div class="wave-container">
+            <div class="wave visible-wave">
+              <span class="wave-label">VISIBLE LIGHT</span>
+              <div class="wave-line"></div>
+            </div>
+            <div class="wave-arrow">&gt;&gt; stretches to &gt;&gt;</div>
+            <div class="wave infrared-wave">
+              <span class="wave-label">INFRARED (INVISIBLE!)</span>
+              <div class="wave-line stretched"></div>
+            </div>
+          </div>
+          <p class="demo-caption">As the universe expands, visible light gets stretched into invisible infrared radiation -- that's why space looks dark!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== STAR LIFECYCLE ===================== -->
+  <section id="star-lifecycle" class="section content-section alt-bg">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// STELLAR EVOLUTION</span>
+        <h2 class="section-title">THE LIFE &amp; DEATH OF STARS</h2>
+        <p class="section-subtitle">Every star is born, lives, and eventually dies -- some go out with a bang!</p>
+      </div>
+
+      <div class="simulation-container fade-in">
+        <div class="canvas-wrapper">
+          <canvas id="star-lifecycle-canvas" width="800" height="500"></canvas>
+        </div>
+        <div class="sim-controls">
+          <button id="star-prev-btn" class="sim-btn" aria-label="Previous stage">
+            &lt;&lt; PREV
+          </button>
+          <div id="star-stage-label" class="stage-label">NEBULA</div>
+          <button id="star-next-btn" class="sim-btn" aria-label="Next stage">
+            NEXT &gt;&gt;
+          </button>
+        </div>
+        <div id="star-stage-info" class="stage-info pixel-card">
+          <p>A <strong>nebula</strong> is a giant cloud of gas and dust in space. Gravity slowly pulls the material together, and a new star begins to form!</p>
+        </div>
+      </div>
+
+      <div class="lifecycle-timeline fade-in">
+        <div class="timeline-track">
+          <div class="timeline-step" data-stage="0">
+            <div class="timeline-dot active"></div>
+            <span class="timeline-label">NEBULA</span>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step" data-stage="1">
+            <div class="timeline-dot"></div>
+            <span class="timeline-label">PROTOSTAR</span>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step" data-stage="2">
+            <div class="timeline-dot"></div>
+            <span class="timeline-label">MAIN SEQ</span>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step" data-stage="3">
+            <div class="timeline-dot"></div>
+            <span class="timeline-label">RED GIANT</span>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step" data-stage="4">
+            <div class="timeline-dot"></div>
+            <span class="timeline-label">WHITE DWARF</span>
+          </div>
+          <div class="timeline-connector"></div>
+          <div class="timeline-step" data-stage="5">
+            <div class="timeline-dot"></div>
+            <span class="timeline-label">SUPERNOVA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PLANET FORMATION ===================== -->
+  <section id="planet-formation" class="section content-section">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// BUILDING WORLDS</span>
+        <h2 class="section-title">HOW PLANETS FORM</h2>
+        <p class="section-subtitle">From swirling dust to entire worlds -- click to add matter and watch planets grow!</p>
+      </div>
+
+      <div class="simulation-container fade-in">
+        <div class="canvas-wrapper">
+          <canvas id="planet-formation-canvas" width="800" height="500"></canvas>
+        </div>
+        <div class="sim-controls">
+          <button id="planet-add-btn" class="sim-btn accent-btn">
+            [+] ADD MATTER
+          </button>
+          <button id="planet-reset-btn" class="sim-btn">
+            [R] RESET
+          </button>
+        </div>
+        <div class="stage-info pixel-card">
+          <p>Planets form from a <strong>protoplanetary disk</strong> -- a swirling cloud of gas and dust around a young star. Tiny particles collide and stick together, growing into <strong>planetesimals</strong> and eventually full planets! Click "ADD MATTER" to see the process in action.</p>
+        </div>
+      </div>
+
+      <div class="content-grid three-col fade-in">
+        <div class="pixel-card mini-card">
+          <div class="card-icon">[ROCKY]</div>
+          <h3>ROCKY PLANETS</h3>
+          <p>Mercury, Venus, Earth, Mars -- formed close to the Sun where it's too hot for gas to condense. Made of rock and metal.</p>
+        </div>
+        <div class="pixel-card mini-card">
+          <div class="card-icon">[GAS]</div>
+          <h3>GAS GIANTS</h3>
+          <p>Jupiter and Saturn -- formed farther out where it's cold enough for gas to accumulate. Mostly hydrogen and helium!</p>
+        </div>
+        <div class="pixel-card mini-card">
+          <div class="card-icon">[ICE]</div>
+          <h3>ICE GIANTS</h3>
+          <p>Uranus and Neptune -- the most distant, made of ices (water, ammonia, methane) with thick atmospheres.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PLANETARY DIG ===================== -->
+  <section id="planet-dig" class="section content-section alt-bg">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// ARCHAEOLOGY OF WORLDS</span>
+        <h2 class="section-title">DIG INTO FORMATION</h2>
+        <p class="section-subtitle">Grab your pixel shovel! Click and drag to dig through the crust and uncover how each planet formed.</p>
+      </div>
+
+      <div class="dig-container fade-in">
+        <div class="dig-layout">
+          <div class="canvas-wrapper dig-wrapper">
+            <canvas id="dig-canvas" width="600" height="600"></canvas>
+            <div id="dig-shovel" class="dig-shovel"></div>
+          </div>
+          
+          <div class="dig-info-panel pixel-card">
+            <div class="dig-controls">
+              <button id="dig-prev" class="sim-btn accent-btn">&lt;&lt;</button>
+              <span id="dig-planet-name" class="stage-label">EARTH</span>
+              <button id="dig-next" class="sim-btn accent-btn">&gt;&gt;</button>
+            </div>
+            
+            <div class="dig-progress-container">
+              <p class="dig-progress-text">CRUST REMOVAL: <span id="dig-progress-val">0%</span></p>
+              <div class="dig-progress-bar"><div id="dig-progress-fill" class="dig-progress-fill"></div></div>
+            </div>
+
+            <div id="dig-formation-card" class="dig-formation-card" hidden>
+              <h3 class="dig-formation-title">CORE REACHED!</h3>
+              <p id="dig-formation-text" class="dig-formation-desc">--</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GALAXIES ===================== -->
+  <section id="galaxies" class="section content-section alt-bg-2">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// COSMIC STRUCTURES</span>
+        <h2 class="section-title">TYPES OF GALAXIES</h2>
+        <p class="section-subtitle">Galaxies are vast collections of stars, gas, dust, and dark matter bound together by gravity</p>
+      </div>
+
+      <div class="galaxy-showcase fade-in">
+        <div class="galaxy-card pixel-card" data-galaxy="spiral" id="galaxy-card-spiral">
+          <canvas id="galaxy-spiral-canvas" width="250" height="250"></canvas>
+          <h3>SPIRAL</h3>
+          <p>Beautiful rotating arms of stars and gas. Our Milky Way is a spiral galaxy!</p>
+          <div class="galaxy-fact">Contains: <span class="accent-text">100-400 billion stars</span></div>
+        </div>
+        <div class="galaxy-card pixel-card" data-galaxy="elliptical" id="galaxy-card-elliptical">
+          <canvas id="galaxy-elliptical-canvas" width="250" height="250"></canvas>
+          <h3>ELLIPTICAL</h3>
+          <p>Smooth, oval-shaped collections of old stars. The largest galaxies in the universe are elliptical!</p>
+          <div class="galaxy-fact">Can contain: <span class="accent-text">up to 100 trillion stars</span></div>
+        </div>
+        <div class="galaxy-card pixel-card" data-galaxy="irregular" id="galaxy-card-irregular">
+          <canvas id="galaxy-irregular-canvas" width="250" height="250"></canvas>
+          <h3>IRREGULAR</h3>
+          <p>No defined shape -- often formed by galaxy collisions. Chaotic but full of new star formation!</p>
+          <div class="galaxy-fact">Examples: <span class="accent-text">Large &amp; Small Magellanic Clouds</span></div>
+        </div>
+      </div>
+
+      <div class="pixel-card highlight-card fade-in">
+        <div class="card-icon">[HOME]</div>
+        <h3>OUR HOME: THE MILKY WAY</h3>
+        <p>We live in a <strong>barred spiral galaxy</strong> about <strong>100,000 light-years</strong> across. Our Solar System sits on a minor arm called the <strong>Orion Arm</strong>, about 26,000 light-years from the galactic center. It takes our Sun about <strong>230 million years</strong> to orbit the center once -- that's called a <strong>galactic year</strong>!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SPACE OBJECTS COMPARISON ===================== -->
+  <section id="space-objects" class="section content-section">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// KNOW THE DIFFERENCE</span>
+        <h2 class="section-title">METEOR vs METEORITE vs ASTEROID vs COMET</h2>
+        <p class="section-subtitle">They all sound similar, but they're very different! Let's sort them out.</p>
+      </div>
+
+      <div class="objects-grid fade-in">
+        <!-- Meteor -->
+        <div class="object-card pixel-card" id="meteor-card">
+          <div class="object-visual" id="meteor-visual">
+            <img src="assets/pixel_meteor.png" alt="Pixel Meteor" class="pixel-object-img">
+          </div>
+          <div class="object-info">
+            <h3>METEOR</h3>
+            <span class="object-nickname">"Shooting Star"</span>
+            <p>A <strong>streak of light</strong> in the sky when a small piece of space debris burns up in Earth's atmosphere. They're not actually stars!</p>
+            <div class="object-stats">
+              <div class="stat">
+                <span class="stat-label">Location</span>
+                <span class="stat-value">Earth's Atmosphere</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Speed</span>
+                <span class="stat-value">11-72 km/s</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Size</span>
+                <span class="stat-value">Grain of sand to pebble</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Meteorite -->
+        <div class="object-card pixel-card" id="meteorite-card">
+          <div class="object-visual" id="meteorite-visual">
+            <img src="assets/pixel_meteorite.png" alt="Pixel Meteorite" class="pixel-object-img">
+          </div>
+          <div class="object-info">
+            <h3>METEORITE</h3>
+            <span class="object-nickname">"The Survivor"</span>
+            <p>A piece of space rock that <strong>survives the journey</strong> through Earth's atmosphere and lands on the ground. You can actually find and hold them!</p>
+            <div class="object-stats">
+              <div class="stat">
+                <span class="stat-label">Location</span>
+                <span class="stat-value">Earth's Surface</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Types</span>
+                <span class="stat-value">Stony, Iron, Stony-iron</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Fun Fact</span>
+                <span class="stat-value">~48 tonnes fall daily!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Asteroid -->
+        <div class="object-card pixel-card" id="asteroid-card">
+          <div class="object-visual" id="asteroid-visual">
+            <img src="assets/pixel_asteroid.png" alt="Pixel Asteroid" class="pixel-object-img">
+          </div>
+          <div class="object-info">
+            <h3>ASTEROID</h3>
+            <span class="object-nickname">"Rocky Wanderer"</span>
+            <p>A <strong>rocky or metallic body</strong> orbiting the Sun, mostly found in the Asteroid Belt between Mars and Jupiter. Leftovers from the early solar system!</p>
+            <div class="object-stats">
+              <div class="stat">
+                <span class="stat-label">Location</span>
+                <span class="stat-value">Mostly Asteroid Belt</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Size Range</span>
+                <span class="stat-value">1m to 530km (Vesta)</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Count</span>
+                <span class="stat-value">1+ million known</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comet -->
+        <div class="object-card pixel-card" id="comet-card">
+          <div class="object-visual" id="comet-visual">
+            <img src="assets/pixel_comet.png" alt="Pixel Comet" class="pixel-object-img">
+          </div>
+          <div class="object-info">
+            <h3>COMET</h3>
+            <span class="object-nickname">"Dirty Snowball"</span>
+            <p>A <strong>frozen ball of ice, dust, and gas</strong> that develops spectacular tails when it gets close to the Sun. The tail always points <em>away</em> from the Sun!</p>
+            <div class="object-stats">
+              <div class="stat">
+                <span class="stat-label">Location</span>
+                <span class="stat-value">Oort Cloud / Kuiper Belt</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Tail Length</span>
+                <span class="stat-value">Up to 150 million km!</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Famous</span>
+                <span class="stat-value">Halley's Comet (76 yrs)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick comparison table -->
+      <div class="comparison-table-wrapper fade-in">
+        <h3 class="table-title">QUICK COMPARISON</h3>
+        <div class="pixel-card table-card">
+          <table class="comparison-table" role="table">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col">Meteor</th>
+                <th scope="col">Meteorite</th>
+                <th scope="col">Asteroid</th>
+                <th scope="col">Comet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>What is it?</strong></td>
+                <td>Light streak</td>
+                <td>Rock on ground</td>
+                <td>Rocky body in space</td>
+                <td>Icy body with tail</td>
+              </tr>
+              <tr>
+                <td><strong>Where?</strong></td>
+                <td>Atmosphere</td>
+                <td>Earth's surface</td>
+                <td>Orbiting the Sun</td>
+                <td>Orbiting the Sun</td>
+              </tr>
+              <tr>
+                <td><strong>Made of?</strong></td>
+                <td>Burning debris</td>
+                <td>Rock / Metal</td>
+                <td>Rock / Metal</td>
+                <td>Ice, dust, gas</td>
+              </tr>
+              <tr>
+                <td><strong>Has a tail?</strong></td>
+                <td>Yes (brief)</td>
+                <td>No</td>
+                <td>No</td>
+                <td>Yes (huge!)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ===================== ORBIT SIMULATOR ===================== -->
+  <section id="orbit-sim" class="section content-section alt-bg">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// SOLAR SYSTEM</span>
+        <h2 class="section-title">ORBIT SIMULATOR</h2>
+        <p class="section-subtitle">Click any planet to see its data -- adjust speed with the slider below!</p>
+      </div>
+
+      <div class="simulation-container fade-in">
+        <div class="orbit-sim-layout">
+          <div class="canvas-wrapper orbit-wrapper">
+            <canvas id="orbit-canvas" width="800" height="600"></canvas>
+          </div>
+
+          <!-- Planet Info Card — shown when a planet is clicked -->
+          <div id="planet-info-panel" class="planet-info-panel pixel-card" aria-live="polite" hidden>
+            <button id="planet-info-close" class="planet-info-close" aria-label="Close planet info">[X]</button>
+            <div class="planet-info-header">
+              <div id="planet-info-swatch" class="planet-info-swatch"></div>
+              <h3 id="planet-info-name" class="planet-info-name">--</h3>
+              <span id="planet-info-type" class="planet-info-type">--</span>
+            </div>
+            <div class="planet-info-stats">
+              <div class="planet-stat">
+                <span class="planet-stat-label">SURFACE TEMP</span>
+                <span id="planet-info-temp" class="planet-stat-value">--</span>
+              </div>
+              <div class="planet-stat">
+                <span class="planet-stat-label">AGE</span>
+                <span id="planet-info-age" class="planet-stat-value">--</span>
+              </div>
+              <div class="planet-stat">
+                <span class="planet-stat-label">EXPECTED LIFESPAN</span>
+                <span id="planet-info-lifespan" class="planet-stat-value">--</span>
+              </div>
+            </div>
+            <div class="planet-info-formation">
+              <span class="planet-stat-label">FORMATION</span>
+              <p id="planet-info-formation-text" class="planet-info-desc">--</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim-controls">
+          <label for="speed-slider" class="slider-label">
+            SLOW
+            <input type="range" id="speed-slider" min="0.1" max="5" step="0.1" value="1">
+            FAST
+          </label>
+          <span id="speed-display" class="speed-display">1.0x</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================== BIG BANG ===================== -->
+  <section id="big-bang-interactive" class="section content-section alt-bg">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// ORIGIN OF THE UNIVERSE</span>
+        <h2 class="section-title">THE BIG BANG & CMB</h2>
+        <p class="section-subtitle">Travel back 13.8 billion years to witness the birth of the universe and the stretching of ancient light.</p>
+      </div>
+      <div class="simulation-container fade-in">
+        <div class="canvas-wrapper">
+          <canvas id="bigbang-canvas" width="800" height="500"></canvas>
+        </div>
+        <div class="sim-controls">
+          <button id="btn-singularity" class="sim-btn active">SINGULARITY</button>
+          <button id="btn-expansion" class="sim-btn">EXPANSION</button>
+          <button id="btn-cmb" class="sim-btn">CMB RADIATION</button>
+        </div>
+        <div class="stage-info pixel-card">
+          <p id="bigbang-desc"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BLACK HOLE ===================== -->
+  <section id="black-hole" class="section content-section blackhole-bg">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// THE MOST EXTREME OBJECTS</span>
+        <h2 class="section-title">BLACK HOLES</h2>
+        <p class="section-subtitle">Where gravity is so strong that nothing -- not even light -- can escape!</p>
+      </div>
+
+      <div class="simulation-container fade-in">
+        <div class="canvas-wrapper">
+          <canvas id="blackhole-canvas" width="800" height="500"></canvas>
+        </div>
+        <div class="stage-info pixel-card">
+          <p>A <strong>black hole</strong> forms when a massive star collapses at the end of its life. The gravity is so intense that it warps space and time around it. The boundary around a black hole is called the <strong>event horizon</strong> -- once you cross it, there's no coming back!</p>
+        </div>
+      </div>
+
+      <div class="content-grid three-col fade-in">
+        <div class="pixel-card mini-card">
+          <div class="card-icon">[STELLAR]</div>
+          <h3>STELLAR BLACK HOLES</h3>
+          <p>Formed from collapsed massive stars. About 5-100 times the mass of our Sun, compressed into a tiny space.</p>
+        </div>
+        <div class="pixel-card mini-card">
+          <div class="card-icon">[SUPER]</div>
+          <h3>SUPERMASSIVE BLACK HOLES</h3>
+          <p>Millions to billions of solar masses! One lives at the center of nearly every galaxy -- including ours: <strong>Sagittarius A*</strong></p>
+        </div>
+        <div class="pixel-card mini-card">
+          <div class="card-icon">[TIME]</div>
+          <h3>TIME DILATION</h3>
+          <p>Near a black hole, time itself slows down! If you watched someone fall in, you'd see them freeze at the event horizon.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DISCOVER ALIEN LIFE FORM ===================== -->
+  <section id="alien-life" class="section content-section">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// ASTROBIOLOGY</span>
+        <h2 class="section-title">EXOPLANETS</h2>
+        <p class="section-subtitle">Exoplanets are planets outside our solar system that orbit other stars! Examine the clues and discover exotic chemistry on these distant worlds.</p>
+      </div>
+
+      <div class="simulation-container fade-in">
+        <div class="orbit-sim-layout">
+          <div class="canvas-wrapper orbit-wrapper" style="position: relative;">
+            <canvas id="exoplanets-canvas" width="800" height="400"></canvas>
+            <div id="exoplanet-tooltip" class="pixel-tooltip hidden" style="position: absolute; pointer-events: none; background: rgba(0,0,0,0.8); border: 2px solid var(--pixel-green); padding: 5px 10px; color: var(--pixel-green); font-size: 14px; border-radius: 4px; z-index: 10;">
+              Planet Name
+            </div>
+          </div>
+
+          <!-- Analysis Lab Panel -->
+          <div id="analysis-lab-modal" class="planet-info-panel pixel-card hidden" style="width: 350px; padding: 20px; border: 4px solid var(--pixel-green); box-shadow: 0 0 20px var(--pixel-green); max-height: 500px; overflow-y: auto;">
+            <h2 style="color: var(--pixel-green); margin-bottom: 20px; font-size: 20px; text-align: center;">ASTROBIOLOGY LAB</h2>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+              <!-- Telescope Data -->
+              <div style="background: rgba(0, 20, 0, 0.4); border: 2px solid var(--pixel-green); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; align-items: center;">
+                <h3 style="color: var(--pixel-green); font-size: 14px; margin-bottom: 10px;">TELESCOPE DATA</h3>
+                <div style="width: 100%; background: #000; border: 2px solid #333; padding: 10px; display: flex; flex-direction: column; align-items: center;">
+                  <img id="lab-planet-img" src="" alt="Planet" style="width: 80px; height: 80px; image-rendering: pixelated; margin-bottom: 10px;">
+                  <div id="lab-planet-stats" style="text-align: left; font-size: 12px; color: var(--pixel-cyan); line-height: 1.4;">
+                    <!-- Populated by JS -->
+                  </div>
                 </div>
-            </div>
-            <div class="scroll-indicator">
-                <span>Scroll to descend</span>
-                <div class="mouse">
-                    <div class="wheel"></div>
+              </div>
+
+              <!-- Microscope View -->
+              <div style="background: rgba(0, 20, 0, 0.4); border: 2px solid var(--pixel-green); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; align-items: center;">
+                <h3 style="color: var(--pixel-green); font-size: 14px; margin-bottom: 10px;">MICROSCOPE</h3>
+                <div id="microscope-viewport" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid #555; background: #000; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,1);">
+                  <div class="static-noise" id="microscope-noise"></div>
+                  <img id="microscope-molecule" src="" alt="Molecule" class="hidden" style="width: 80px; height: 80px; image-rendering: pixelated; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                  <div class="scan-line"></div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Section 1: Celestial Encyclopedia -->
-        <section class="section glass-section" id="encyclopedia">
-            <div class="section-header">
-                <span class="section-tag">Database</span>
-                <h2>Celestial Encyclopedia</h2>
-                <p>Select a cosmic body to inspect its structure, properties, and role in the cosmic ecosystem.</p>
+                <div id="molecule-name" class="hidden" style="color: var(--pixel-yellow); margin-top: 10px; font-size: 14px; text-shadow: 1px 1px #000;"></div>
+              </div>
             </div>
 
-            <div class="tabs-container">
-                <div class="tab-list glass-panel" role="tablist">
-                    <button class="tab-btn active" id="tab-star" role="tab" aria-selected="true">Star</button>
-                    <button class="tab-btn" id="tab-planet" role="tab" aria-selected="false">Planet</button>
-                    <button class="tab-btn" id="tab-comet" role="tab" aria-selected="false">Comet</button>
-                    <button class="tab-btn" id="tab-asteroid" role="tab" aria-selected="false">Asteroid</button>
-                    <button class="tab-btn" id="tab-meteoroid" role="tab" aria-selected="false">Meteoroid/Meteorite</button>
-                </div>
-
-                <div class="tab-panels">
-                    <!-- Star Panel -->
-                    <div class="tab-panel active" id="panel-star" role="tabpanel">
-                        <div class="panel-grid">
-                            <div class="panel-visual">
-                                <div class="celestial-wrapper">
-                                    <div class="celestial-body star-glowing"></div>
-                                    <div class="flare-1"></div>
-                                    <div class="flare-2"></div>
-                                </div>
-                            </div>
-                            <div class="panel-info">
-                                <span class="badge red-badge">Fusion Core</span>
-                                <h3>The Engine of the Cosmos</h3>
-                                <p>Stars are luminous spheres of plasma held together by their own gravity. They initiate nuclear fusion in their cores, converting hydrogen into helium and emitting immense energy that powers planetary systems.</p>
-                                <div class="fact-grid">
-                                    <div class="fact-card">
-                                        <span class="fact-val">15M °C</span>
-                                        <span class="fact-lbl">Core Temp</span>
-                                    </div>
-                                    <div class="fact-card">
-                                        <span class="fact-val">99.8%</span>
-                                        <span class="fact-lbl">Solar System Mass</span>
-                                    </div>
-                                </div>
-                                <div class="panel-cta">
-                                    <a href="#formation-lab" class="inline-btn" id="go-to-star-form">Simulate Star Formation →</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Planet Panel -->
-                    <div class="tab-panel" id="panel-planet" role="tabpanel">
-                        <div class="panel-grid">
-                            <div class="panel-visual">
-                                <div class="celestial-wrapper">
-                                    <div class="celestial-body planet-rocky">
-                                        <div class="planet-shadow"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel-info">
-                                <span class="badge blue-badge">Hydrostatic Equilibrium</span>
-                                <h3>Worlds of Rock and Gas</h3>
-                                <p>Planets form from the protoplanetary disks surrounding young stars. To be classified as a planet, a body must be spherical due to its own gravity, orbit a star, and have cleared its orbital path of other debris.</p>
-                                <div class="fact-grid">
-                                    <div class="fact-card">
-                                        <span class="fact-val">2 Types</span>
-                                        <span class="fact-lbl">Terrestrial & Jovian</span>
-                                    </div>
-                                    <div class="fact-card">
-                                        <span class="fact-val">4.5 B Yrs</span>
-                                        <span class="fact-lbl">Average Age</span>
-                                    </div>
-                                </div>
-                                <div class="panel-cta">
-                                    <a href="#formation-lab" class="inline-btn" id="go-to-planet-form">Simulate Accretion →</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Comet Panel -->
-                    <div class="tab-panel" id="panel-comet" role="tabpanel">
-                        <div class="panel-grid">
-                            <div class="panel-visual">
-                                <div class="celestial-wrapper">
-                                    <div class="comet-body">
-                                        <div class="comet-head"></div>
-                                        <div class="comet-tail-gas"></div>
-                                        <div class="comet-tail-dust"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel-info">
-                                <span class="badge ice-badge">Dirty Snowballs</span>
-                                <h3>Icy Cosmic Wanderers</h3>
-                                <p>Comets are cosmic snowballs of frozen gases, rock, and dust orbiting the Sun in highly eccentric trajectories. When approaching the Sun, they heat up and release gas and dust, forming a glowing coma and two distinct tails (ion and dust) pointing away from the Sun.</p>
-                                <div class="fact-grid">
-                                    <div class="fact-card">
-                                        <span class="fact-val">-220 °C</span>
-                                        <span class="fact-lbl">Average Temp</span>
-                                    </div>
-                                    <div class="fact-card">
-                                        <span class="fact-val">2 Tails</span>
-                                        <span class="fact-lbl">Ion & Dust Tails</span>
-                                    </div>
-                                </div>
-                                <div class="panel-cta">
-                                    <a href="#orbit-playground" class="inline-btn">View Comet Trajectory →</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Asteroid Panel -->
-                    <div class="tab-panel" id="panel-asteroid" role="tabpanel">
-                        <div class="panel-grid">
-                            <div class="panel-visual">
-                                <div class="celestial-wrapper">
-                                    <div class="asteroid-body">
-                                        <div class="crater" style="top: 20%; left: 30%; width: 12px; height: 12px;"></div>
-                                        <div class="crater" style="top: 55%; left: 60%; width: 18px; height: 18px;"></div>
-                                        <div class="crater" style="top: 40%; left: 15%; width: 8px; height: 8px;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel-info">
-                                <span class="badge grey-badge">Rocky Remnants</span>
-                                <h3>Building Blocks of Planets</h3>
-                                <p>Asteroids are rocky, metallic, airless remnants left over from the early formation of our solar system about 4.6 billion years ago. Most reside within the vast Asteroid Belt between Mars and Jupiter.</p>
-                                <div class="fact-grid">
-                                    <div class="fact-card">
-                                        <span class="fact-val">1M+</span>
-                                        <span class="fact-lbl">Known Asteroids</span>
-                                    </div>
-                                    <div class="fact-card">
-                                        <span class="fact-val">No Air</span>
-                                        <span class="fact-lbl">Atmosphere</span>
-                                    </div>
-                                </div>
-                                <div class="panel-cta">
-                                    <a href="#orbit-playground" class="inline-btn">Observe Orbit Belts →</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Meteoroid/Meteorite Panel -->
-                    <div class="tab-panel" id="panel-meteoroid" role="tabpanel">
-                        <div class="panel-grid">
-                            <div class="panel-visual">
-                                <div class="meteoroid-stages">
-                                    <div class="stage-col">
-                                        <div class="stage-icon meteoroid-icon">☄️</div>
-                                        <h4>Meteoroid</h4>
-                                        <p>A small chunk of rock/debris in space.</p>
-                                    </div>
-                                    <div class="stage-arrow">➔</div>
-                                    <div class="stage-col">
-                                        <div class="stage-icon meteor-icon">🔥</div>
-                                        <h4>Meteor</h4>
-                                        <p>Burns in the atmosphere (shooting star).</p>
-                                    </div>
-                                    <div class="stage-arrow">➔</div>
-                                    <div class="stage-col">
-                                        <div class="stage-icon meteorite-icon">🪨</div>
-                                        <h4>Meteorite</h4>
-                                        <p>Survives entry and impacts the ground.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel-info">
-                                <span class="badge atmospheric-badge">Debris Cycle</span>
-                                <h3>The Atmospheric Journey</h3>
-                                <p>These terms describe the same object at different points in its path. A <strong>Meteoroid</strong> is a small rock floating in space. When it enters a planet's atmosphere and vaporizes, creating a flash of light, it is a <strong>Meteor</strong>. If it manages to survive the atmospheric friction and strikes the ground, it is called a <strong>Meteorite</strong>.</p>
-                                <div class="fact-grid">
-                                    <div class="fact-card">
-                                        <span class="fact-val">20 km/s</span>
-                                        <span class="fact-lbl">Entry Speed</span>
-                                    </div>
-                                    <div class="fact-card">
-                                        <span class="fact-val">1,600 °C</span>
-                                        <span class="fact-lbl">Friction Heat</span>
-                                    </div>
-                                </div>
-                                <div class="panel-cta">
-                                    <button class="inline-btn launch-demo-btn" id="trigger-play-meteor">Simulate Atmospheric Entry ↓</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 2: Cosmic Formation Lab -->
-        <section class="section glass-section" id="formation-lab">
-            <div class="section-header">
-                <span class="section-tag">Simulations</span>
-                <h2>Cosmic Formation Lab</h2>
-                <p>Interact with real-time physics simulations demonstrating the structural birth of stars and planetary systems.</p>
+            <!-- Puzzle Area -->
+            <div style="background: rgba(0, 0, 0, 0.5); border: 2px solid var(--pixel-cyan); padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px;">
+              <p id="lab-puzzle-text" style="font-size: 14px; margin-bottom: 15px; color: #fff;"></p>
+              <div id="lab-puzzle-options" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                <!-- Populated by JS -->
+              </div>
             </div>
 
-            <div class="lab-switcher glass-panel">
-                <button class="lab-btn active" id="lab-star-btn">Star Formation (Collapse)</button>
-                <button class="lab-btn" id="lab-planet-btn">Planet Accretion (Protoplanetary Disk)</button>
+            <button id="close-lab-btn" class="pixel-btn" style="margin-top: 20px; width: 100%; border-color: var(--pixel-green); color: var(--pixel-green);">CLOSE LAB</button>
+          </div>
+        </div>
+      </div>
+
+  <!-- ===================== MIND-BLOWING QUESTIONS ===================== -->
+  <section id="mind-blowing" class="section content-section">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// THINK ABOUT THIS...</span>
+        <h2 class="section-title">MIND-BLOWING QUESTIONS</h2>
+        <p class="section-subtitle">Click each card to reveal the answer!</p>
+      </div>
+
+      <div class="qa-grid fade-in">
+        <div class="qa-card" id="qa-1" tabindex="0" role="button" aria-label="Click to reveal answer">
+          <div class="qa-inner">
+            <div class="qa-front pixel-card">
+              <div class="qa-icon">[?]</div>
+              <h3>Could our galaxy be inside a black hole?</h3>
+              <span class="qa-hint">[CLICK TO REVEAL]</span>
             </div>
-
-            <div class="lab-container">
-                <!-- Star Formation Canvas Block -->
-                <div class="lab-content active" id="lab-star-content">
-                    <div class="canvas-wrapper">
-                        <canvas id="star-formation-canvas"></canvas>
-                        <div class="hud-overlay" id="star-hud">
-                            <div class="hud-stat">CORE TEMP: <span id="star-temp">1,200</span> K</div>
-                            <div class="hud-stat">DENSITY: <span id="star-density">1.2</span> × 10<sup>-19</sup> g/cm³</div>
-                            <div class="hud-stat">STAGE: <span id="star-stage">Molecular Cloud</span></div>
-                        </div>
-                    </div>
-                    <div class="lab-controls glass-panel">
-                        <h3>Gravitational Collapse</h3>
-                        <p class="control-desc">A star forms when massive clouds of cold molecular gas and interstellar dust undergo gravitational collapse. When the density and temperature reach extreme levels, nuclear fusion ignites.</p>
-                        
-                        <div class="timeline-stepper">
-                            <div class="step-indicator current" id="star-step-1">1. Cloud</div>
-                            <div class="step-indicator" id="star-step-2">2. Protostar</div>
-                            <div class="step-indicator" id="star-step-3">3. Fusion</div>
-                        </div>
-
-                        <div class="btn-group">
-                            <button class="control-btn primary-glow" id="star-trigger-btn">Compress Gas Cloud</button>
-                            <button class="control-btn" id="star-reset-btn">Reset Cloud</button>
-                        </div>
-                        <div class="science-note glass-panel">
-                            <strong>Astro Physics Info:</strong> Gravitational potential energy is converted to thermal energy during contraction, causing the protostar core to glow in the infrared spectrum before fusion starts.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Planet Formation Canvas Block -->
-                <div class="lab-content" id="lab-planet-content">
-                    <div class="canvas-wrapper">
-                        <canvas id="planet-formation-canvas"></canvas>
-                        <div class="hud-overlay" id="planet-hud">
-                            <div class="hud-stat">PLANETESIMALS: <span id="planet-count">0</span></div>
-                            <div class="hud-stat">DISK DUST: <span id="planet-dust">100%</span></div>
-                            <div class="hud-stat">ORBIT CLEARANCE: <span id="planet-cleared">0%</span></div>
-                        </div>
-                    </div>
-                    <div class="lab-controls glass-panel">
-                        <h3>Planetary Accretion</h3>
-                        <p class="control-desc">Planets coalesce from the leftovers of star formation. Electrostatic forces make tiny dust grains stick together, building up planetesimals. Eventually, gravity takes over, sweeping the orbit clean.</p>
-
-                        <div class="timeline-stepper">
-                            <div class="step-indicator current" id="planet-step-1">1. Nebula Disk</div>
-                            <div class="step-indicator" id="planet-step-2">2. Accretion</div>
-                            <div class="step-indicator" id="planet-step-3">3. Orbit Clear</div>
-                        </div>
-
-                        <div class="btn-group">
-                            <button class="control-btn primary-glow" id="planet-trigger-btn">Accrete Particles</button>
-                            <button class="control-btn" id="planet-reset-btn">Reset Disk</button>
-                        </div>
-                        <div class="science-note glass-panel">
-                            <strong>Astro Physics Info:</strong> Heavy elements (silicates, iron) accrete close to the star forming rocky planets, while lighter volatiles (water, methane) freeze out further away, creating gas/ice giants.
-                        </div>
-                    </div>
-                </div>
+            <div class="qa-back pixel-card">
+              <p>Some physicists have proposed this! The idea is that every black hole might contain a new universe inside it. Our observable universe could theoretically exist inside a black hole in a "parent universe." It's called <strong>cosmological natural selection</strong> -- but it's still highly speculative!</p>
             </div>
-        </section>
+          </div>
+        </div>
 
-        <!-- Section 3: Exoplanets & Astrobiology -->
-        <section class="section glass-section" id="exoplanets">
-            <div class="section-header">
-                <span class="section-tag">Astrobiology</span>
-                <h2>Exoplanet Worlds & Life Forms</h2>
-                <p>Discover worlds beyond our solar system and explore speculative anatomical adaptations of life suited to survive their extreme environments.</p>
+        <div class="qa-card" id="qa-2" tabindex="0" role="button" aria-label="Click to reveal answer">
+          <div class="qa-inner">
+            <div class="qa-front pixel-card">
+              <div class="qa-icon">[?]</div>
+              <h3>Can sound travel in space?</h3>
+              <span class="qa-hint">[CLICK TO REVEAL]</span>
             </div>
-
-            <div class="exoplanet-layout">
-                <!-- Left: Exoplanet Cards List -->
-                <div class="exoplanet-selector-grid">
-                    <!-- Super Earth -->
-                    <div class="exoplanet-card active glass-panel" data-biome="super-earth">
-                        <div class="card-glow"></div>
-                        <h4>Giga-Gravity (Super-Earth)</h4>
-                        <p>Massive rocky world with 3x Earth's gravity, dense atmospheric pressures, and thick crushing oceans.</p>
-                        <div class="metric-row">
-                            <span>Gravity: 3.2g</span>
-                            <span>Atmosphere: 5 atm</span>
-                        </div>
-                    </div>
-
-                    <!-- Ocean World -->
-                    <div class="exoplanet-card glass-panel" data-biome="ocean-world">
-                        <div class="card-glow"></div>
-                        <h4>Sub-Glacial Ocean</h4>
-                        <p>A frozen global ocean covered in ice kilometers thick, warmed only by hydro-thermal vents at the seabed.</p>
-                        <div class="metric-row">
-                            <span>Ice Crust: 15 km</span>
-                            <span>Water Depth: 120 km</span>
-                        </div>
-                    </div>
-
-                    <!-- Tidally Locked -->
-                    <div class="exoplanet-card glass-panel" data-biome="locked-desert">
-                        <div class="card-glow"></div>
-                        <h4>Tidally Locked (Eyeball Planet)</h4>
-                        <p>One hemisphere permanently faces its star (scorching desert); the other faces deep space (glacial ice sheets).</p>
-                        <div class="metric-row">
-                            <span>Scorched: 180°C</span>
-                            <span>Frozen: -110°C</span>
-                        </div>
-                    </div>
-
-                    <!-- Gas Giant -->
-                    <div class="exoplanet-card glass-panel" data-biome="gas-giant">
-                        <div class="card-glow"></div>
-                        <h4>Gas Giant (Upper Atmosphere)</h4>
-                        <p>Violent winds and storms in a hydrogen-helium atmosphere with no solid surface.</p>
-                        <div class="metric-row">
-                            <span>Wind Speed: 800m/s</span>
-                            <span>Pressure: Variable</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right: Astrobiology Specimen Visualizer -->
-                <div class="specimen-visualizer glass-panel">
-                    <div class="visualizer-header">
-                        <h3>Specimen Laboratory</h3>
-                        <span class="pulse-indicator">LIVE RENDER</span>
-                    </div>
-                    
-                    <div class="visualizer-body">
-                        <!-- Canvas for drawing speculative animated creatures -->
-                        <canvas id="astrobiology-canvas"></canvas>
-                        
-                        <div class="specimen-overlay glass-panel" id="specimen-details">
-                            <h4 id="specimen-name">Giga-Tardigrade</h4>
-                            <p id="specimen-description">Flattened, segmented body with skeletal hydraulic legs to distribute massive gravitational loads. Utilizes silicon-carbon polymers to prevent cellular collapse under high pressure.</p>
-                            <div class="adaptation-list">
-                                <h5>Adaptation Markers:</h5>
-                                <ul id="specimen-adaptations">
-                                    <li>Low profile profile to minimize vertical gravitational drag.</li>
-                                    <li>Thick carbon-nanotube reinforced exoskeleton.</li>
-                                    <li>Anaerobic glycolysis powered by iron reduction.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="qa-back pixel-card">
+              <p><strong>No!</strong> Sound needs a medium (like air or water) to travel through. Space is a near-perfect vacuum. However, NASA did "sonify" a black hole in 2022 -- they converted pressure waves in hot gas around a black hole into audible sound. It was a deep, eerie hum in B-flat, 57 octaves below middle C!</p>
             </div>
-        </section>
+          </div>
+        </div>
 
-        <!-- Section 4: Trajectory Sandbox -->
-        <section class="section glass-section" id="orbit-playground">
-            <div class="section-header">
-                <span class="section-tag">Sandbox</span>
-                <h2>Trajectory Sandbox</h2>
-                <p>Observe the orbital dynamics of solar objects. Launch meteoroids to visualize the path and heat transformations of meteors and meteorites.</p>
+        <div class="qa-card" id="qa-3" tabindex="0" role="button" aria-label="Click to reveal answer">
+          <div class="qa-inner">
+            <div class="qa-front pixel-card">
+              <div class="qa-icon">[?]</div>
+              <h3>How many stars are there in the universe?</h3>
+              <span class="qa-hint">[CLICK TO REVEAL]</span>
             </div>
-
-            <div class="sandbox-container">
-                <div class="canvas-wrapper sandbox-canvas-wrapper">
-                    <canvas id="orbit-canvas"></canvas>
-                    <div class="orbit-legend">
-                        <div class="legend-item"><span class="legend-dot color-star"></span> Star</div>
-                        <div class="legend-item"><span class="legend-dot color-planet"></span> Planet</div>
-                        <div class="legend-item"><span class="legend-dot color-comet"></span> Comet (Elliptical + Tail)</div>
-                        <div class="legend-item"><span class="legend-dot color-asteroid"></span> Asteroid (Belt)</div>
-                        <div class="legend-item"><span class="legend-dot color-meteoroid"></span> Meteoroid / Meteor / Impact</div>
-                    </div>
-                </div>
-
-                <div class="sandbox-sidebar glass-panel">
-                    <h3>Simulation Controls</h3>
-                    <p class="sidebar-info">Our sandbox displays the visual differences in celestial paths. Comets travel in extreme orbits, creating sublimation tails as they approach solar warmth, while asteroids occupy stable belts.</p>
-                    
-                    <div class="control-box">
-                        <label for="speed-slider">Simulation Speed</label>
-                        <input type="range" id="speed-slider" min="0.5" max="3" step="0.1" value="1">
-                        <span class="range-value"><span id="speed-val">1.0</span>x</span>
-                    </div>
-
-                    <div class="btn-group-vertical">
-                        <button class="control-btn primary-glow" id="btn-launch-meteor">Launch Meteoroid</button>
-                        <button class="control-btn" id="btn-reset-sandbox">Reset Trajectories</button>
-                    </div>
-
-                    <div class="event-log glass-panel">
-                        <h4>Atmospheric Events</h4>
-                        <div class="log-entries" id="event-log-container">
-                            <div class="log-entry system-entry">Sandbox initialized. Celestial orbits stable.</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="qa-back pixel-card">
+              <p>About <strong>200 sextillion</strong> -- that's 200,000,000,000,000,000,000,000! That's more stars than grains of sand on every beach on Earth. And each one could have its own planets. The numbers are truly mind-boggling!</p>
             </div>
-        </section>
-    </main>
+          </div>
+        </div>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <p>&copy; 2026 Cosmic Voyager. Built for educators, dreamers, and explorers of the final frontier.</p>
-    </footer>
+        <div class="qa-card" id="qa-4" tabindex="0" role="button" aria-label="Click to reveal answer">
+          <div class="qa-inner">
+            <div class="qa-front pixel-card">
+              <div class="qa-icon">[?]</div>
+              <h3>What happens if you fall into a black hole?</h3>
+              <span class="qa-hint">[CLICK TO REVEAL]</span>
+            </div>
+            <div class="qa-back pixel-card">
+              <p>You'd experience <strong>"spaghettification"</strong> -- the gravity at your feet would be so much stronger than at your head that you'd be stretched into a long, thin strand like spaghetti! For a supermassive black hole, you might actually survive crossing the event horizon initially, but you'd never escape.</p>
+            </div>
+          </div>
+        </div>
 
-    <!-- Scripts -->
-    <script type="module" src="js/app.js"></script>
+        <div class="qa-card" id="qa-5" tabindex="0" role="button" aria-label="Click to reveal answer">
+          <div class="qa-inner">
+            <div class="qa-front pixel-card">
+              <div class="qa-icon">[?]</div>
+              <h3>What is dark matter?</h3>
+              <span class="qa-hint">[CLICK TO REVEAL]</span>
+            </div>
+            <div class="qa-back pixel-card">
+              <p>About <strong>85% of all matter</strong> in the universe is "dark matter" -- we can't see it, touch it, or detect it directly! We only know it exists because of its gravitational effects on galaxies. It's one of the biggest unsolved mysteries in science. Normal matter (everything you can see) is only about 5% of the universe!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-card" id="qa-6" tabindex="0" role="button" aria-label="Click to reveal answer">
+          <div class="qa-inner">
+            <div class="qa-front pixel-card">
+              <div class="qa-icon">[?]</div>
+              <h3>Does it rain diamonds on other planets?</h3>
+              <span class="qa-hint">[CLICK TO REVEAL]</span>
+            </div>
+            <div class="qa-back pixel-card">
+              <p><strong>Yes!</strong> On Neptune and Uranus, the extreme pressure and temperature can crush carbon atoms into diamonds. Scientists believe it literally <strong>rains diamonds</strong> deep in these planets' atmospheres! These diamonds could be millions of carats in size.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TEST YOUR FLIGHT (ARCADE GAME) ===================== -->
+  <section id="flight-test" class="section content-section alt-bg">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">// ARCADE MODE</span>
+        <h2 class="section-title">SPACE FRENZY</h2>
+        <p class="section-subtitle">You are a team of space explorers sick of being afraid of alien invasions. It's time to flip the script and invade their planets instead! Use WASD/Arrows to fly and SPACE to shoot.</p>
+      </div>
+      
+      <div class="arcade-container fade-in">
+        <div class="arcade-screen">
+          <canvas id="flight-game-canvas" width="800" height="600"></canvas>
+          
+          <!-- Game HUD -->
+          <div id="game-hud" class="game-hud" hidden>
+            <div class="hud-top">
+              <span id="hud-level-text">LEVEL 1</span>
+              <span id="hud-lives-text" style="color:red; font-size:16px;">❤️❤️❤️</span>
+              <span id="hud-score-text">SCORE: 0</span>
+              <div class="health-bar-container">
+                <div id="ship-health-bar" class="health-bar"></div>
+              </div>
+            </div>
+            <div class="hud-center-text" id="hud-objective-text"></div>
+          </div>
+          
+          <!-- Jumpscare Overlay -->
+          <div id="jumpscare-overlay" class="jumpscare-overlay" hidden>
+            <img src="assets/jumpscare.png" alt="Scary Alien Face">
+          </div>
+
+          <!-- Puzzle Quiz Modal -->
+          <div id="flight-quiz-modal" class="pixel-modal" hidden>
+            <div class="pixel-modal-content pixel-card">
+              <h3 id="flight-quiz-title" style="color:var(--pixel-cyan);">COSMIC PUZZLE</h3>
+              <p id="flight-quiz-text">Question text goes here...</p>
+              <div class="quiz-input-group">
+                <input type="text" id="flight-quiz-input" placeholder="Type your answer..." autocomplete="off">
+                <button id="flight-quiz-submit" class="pixel-btn">SUBMIT</button>
+              </div>
+              <p id="flight-quiz-feedback" class="quiz-feedback"></p>
+            </div>
+          </div>
+          <!-- Start/End Overlay -->
+          <div id="flight-overlay" class="pixel-overlay">
+            <div class="pixel-overlay-content">
+              <h2 id="flight-overlay-title">SPACE FRENZY</h2>
+              <div style="display: flex; justify-content: center; gap: 20px; margin: 10px 0;">
+                <img src="assets/jumpscare_grey.png" alt="Grey Alien" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 8px; border: 2px solid var(--pixel-red);">
+                <img src="assets/jumpscare_mantis.png" alt="Mantis Alien" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 8px; border: 2px solid var(--pixel-green);">
+                <img src="assets/jumpscare_nordic.png" alt="Nordic Alien" style="width: 50px; height: 50px; image-rendering: pixelated; border-radius: 8px; border: 2px solid var(--pixel-blue);">
+              </div>
+              <p id="flight-overlay-text">Can you conquer the cosmos?</p>
+              <input type="text" id="player-name-input" placeholder="Enter your name" style="padding: 10px; margin: 15px 0; font-family: 'Press Start 2P', monospace; font-size: 12px; width: 80%; text-align: center; background: #000; color: #0f0; border: 2px solid #555;">
+              <button id="flight-start-btn" class="pixel-btn primary">START ENGINE</button>
+              <div id="leaderboard-container" class="arcade-leaderboard">
+                <h3 class="arcade-title">RANKING</h3>
+                <table class="arcade-table">
+                  <thead><tr><th>RANK</th><th>SCORE</th><th>NAME</th></tr></thead>
+                  <tbody id="leaderboard-list"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span>[*]</span>
+        <span>SPACE EXPLORERS</span>
+      </div>
+      <p class="footer-text">An interactive learning experience for Space Science</p>
+      <p class="footer-credits">BUILT WITH CURIOSITY ABOUT THE COSMOS</p>
+    </div>
+  </footer>
+
+
+  <!-- About Modal -->
+  <div id="about-modal" class="pixel-overlay hidden" style="position: fixed; background: rgba(0, 0, 10, 0.85); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+    <div class="pixel-overlay-content" style="max-width: 600px; background: rgba(0,0,0,0.8); padding: 40px; border: 4px solid var(--pixel-cyan); border-radius: 12px; box-shadow: 0 0 20px var(--pixel-cyan);">
+      <h2 style="color: #0f0; margin-bottom: 30px; font-size: 24px;">ABOUT</h2>
+      <div style="display: flex; align-items: center; justify-content: flex-start; gap: 30px; margin-bottom: 30px;">
+        <div style="width: 150px; height: 150px; overflow: hidden; border: 4px solid var(--pixel-pink); border-radius: 12px; flex-shrink: 0; box-shadow: 0 0 10px var(--pixel-pink);">
+          <img src="assets/mr_yildirim.png?v=2" alt="Mr. Yildirim" style="width: 100%; height: 100%; image-rendering: pixelated; object-fit: cover; object-position: top center;">
+        </div>
+        <div style="text-align: left; flex: 1;">
+          <p style="line-height: 1.8; margin: 0; color: #fff;">
+            This interactive pixel art website was designed by Mr. Yildirim for his students being an amazing group of people!
+          </p>
+        </div>
+      </div>
+      <button id="close-about-btn" class="pixel-btn primary">CLOSE</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBdEiJg38GfjFWBIvQGO5QePUYC7pUYMKo",
+      authDomain: "mryildirim-space-explorer.firebaseapp.com",
+      projectId: "mryildirim-space-explorer",
+      storageBucket: "mryildirim-space-explorer.firebasestorage.app",
+      messagingSenderId: "801343374910",
+      appId: "1:801343374910:web:fe0a058cf98e267f3ef36f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.db = db;
+    window.collection = collection;
+    window.addDoc = addDoc;
+    window.onSnapshot = onSnapshot;
+    window.query = query;
+    window.orderBy = orderBy;
+    window.limit = limit;
+  </script>
+  <script src="app.js?v=13"></script>
+  <img id="astro-img" src="./assets/astronaut_sprite.png" style="display:none;" />
+  <img id="rbox-img" src="./assets/riddle_box.png" style="display:none;" />
 </body>
 </html>
