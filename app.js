@@ -1742,7 +1742,7 @@ function initFlightGame() {
     hudObjective.textContent = 'DEFEAT THE TRAITOR!';
     entities = []; playerLasers = []; enemyLasers = [];
     ship.x = 400; ship.y = 500; ship.vx = 0; ship.vy = 0;
-    entities.push({ type: 'traitor', x: 400, y: 100, hp: 200, maxHp: 200, size: 30 });
+    entities.push({ type: 'traitor', x: 400, y: 100, hp: 200, maxHp: 200, size: 45 });
   }
 
   function startBossDialogue() {
@@ -1965,7 +1965,7 @@ function initFlightGame() {
     hudObjective.textContent = 'DEFEAT THE TRAITOR!';
     entities = []; playerLasers = []; enemyLasers = [];
     ship.x = 400; ship.y = 500; ship.vx = 0; ship.vy = 0;
-    entities.push({ type: 'traitor', x: 400, y: 100, hp: 200, maxHp: 200, size: 30 });
+    entities.push({ type: 'traitor', x: 400, y: 100, hp: 200, maxHp: 200, size: 45 });
   }
 
   function startBossDialogue() {
@@ -2763,30 +2763,34 @@ function initFlightGame() {
             if (e.y > canvas.height + 50 && entities[i]) entities.splice(i, 1);
          }
          else 
-         if (e.type === 'traitor') {
-             e.x += Math.sin(timestamp * 0.005) * 600 * dt;
-             // draw red ship
-             if (!window.traitorImg) { window.traitorImg = new Image(); window.traitorImg.src = 'assets/traitor_ship.png'; }
-             if (window.traitorImg.complete) {
-                 ctx.drawImage(window.traitorImg, e.x - e.size*1.5, e.y - e.size*1.5, e.size*3, e.size*3);
-             }
-             // health bar
-             ctx.fillStyle = '#f00'; ctx.fillRect(e.x - 30, e.y - 40, 60 * (e.hp/e.maxHp), 5);
-             if (Math.random() < 0.15 * dt * 60) enemyLasers.push({x: e.x, y: e.y+20, vy: 400, color: '#f00'});
-             
-             for(let j=playerLasers.length-1; j>=0; j--){
-                 if(Math.hypot(playerLasers[j].x - e.x, playerLasers[j].y - e.y) < e.size) {
-                     e.hp -= 5; playerLasers.splice(j,1);
-                     if (e.hp <= 0) {
-                         createExplosion(e.x, e.y, '#f00', 50); ship.score += 20000; updateHud();
-                         entities.splice(i, 1); gameState = 'TRANSITION';
-                         setTimeout(() => startBossDialogue(), 3000);
-                     }
-                     break;
-                 }
-             }
-             continue;
-         }
+          if (e.type === 'traitor') {
+              e.x += Math.sin(timestamp * 0.005) * 600 * dt;
+              // draw red ship
+              if (!window.traitorImg) { window.traitorImg = new Image(); window.traitorImg.src = 'assets/traitor_ship.png'; }
+              if (window.traitorImg.complete) {
+                  ctx.drawImage(window.traitorImg, e.x - e.size, e.y - e.size, e.size*2, e.size*2);
+              }
+              // health bar (dark background + red bar)
+              ctx.fillStyle = '#333'; ctx.fillRect(e.x - 45, e.y - 55, 90, 6);
+              ctx.fillStyle = '#f00'; ctx.fillRect(e.x - 45, e.y - 55, 90 * (e.hp/e.maxHp), 6);
+              if (Math.random() < 0.15 * dt * 60) enemyLasers.push({x: e.x, y: e.y+20, vy: 400, color: '#f00'});
+              
+              for(let j=playerLasers.length-1; j>=0; j--){
+                  if(Math.hypot(playerLasers[j].x - e.x, playerLasers[j].y - e.y) < e.size) {
+                      e.hp -= 10; 
+                      createExplosion(playerLasers[j].x, playerLasers[j].y, '#ff3333', 5);
+                      playSound('laser');
+                      playerLasers.splice(j,1);
+                      if (e.hp <= 0) {
+                          createExplosion(e.x, e.y, '#f00', 50); ship.score += 20000; updateHud();
+                          entities.splice(i, 1); gameState = 'TRANSITION';
+                          setTimeout(() => startBossDialogue(), 3000);
+                      }
+                      break;
+                  }
+              }
+              continue;
+          }
 
          if (e.type === 'boss') {
             e.x += Math.sin(timestamp * 0.005) * 400 * dt; // Much faster, wilder movement
