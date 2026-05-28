@@ -2775,6 +2775,17 @@ function initFlightGame() {
               ctx.fillStyle = '#f00'; ctx.fillRect(e.x - 45, e.y - 55, 90 * (e.hp/e.maxHp), 6);
               if (Math.random() < 0.15 * dt * 60) enemyLasers.push({x: e.x, y: e.y+20, vy: 400, color: '#f00'});
               
+              // Contact damage with player ship
+              if (!ship.isInvulnerable && Math.hypot(ship.x - e.x, ship.y - e.y) < ship.size + e.size) {
+                  ship.health -= 20; 
+                  updateHud(); 
+                  createExplosion(ship.x, ship.y, '#ff0000', 15);
+                  playSound('explosion');
+                  ship.isInvulnerable = true;
+                  ship.invulnerableTime = 1.5;
+                  if (ship.health <= 0) handleDeath();
+              }
+              
               for(let j=playerLasers.length-1; j>=0; j--){
                   if(Math.hypot(playerLasers[j].x - e.x, playerLasers[j].y - e.y) < e.size) {
                       e.hp -= 10; 
