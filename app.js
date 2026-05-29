@@ -1468,8 +1468,10 @@ function initFlightGame() {
 
   let gameState = 'START';
   let lastTime = 0;
-  let ship = { x: 400, y: 500, vx: 0, vy: 0, speed: 250, size: 20, health: 100, lives: 3, score: 0, powerup: null, powerupTime: 0 };
+  let ship = { x: 400, y: 500, vx: 0, vy: 0, speed: 250, size: 20, health: 100, lives: 3, score: 0, powerup: null, powerupTime: 0, gameStartTime: 0, triviaCorrect: 0, triviaTotal: 0 };
   let keys = {};
+  let isPaused = false;
+  let jumpscareDeck = [];
   
   let playerLasers = [];
   let enemyLasers = [];
@@ -1554,13 +1556,42 @@ function initFlightGame() {
     { q: "What theory states the universe expanded from a single point of infinite density?", a: "Big Bang" },
     { q: "What is the observed increase in the wavelength of light from distant galaxies called?", a: "galactic redshift" },
     { q: "What force is responsible for the formation of stars and planets from nebulas?", a: "Gravity" },
-    { q: "What process powers main sequence stars by converting hydrogen into helium?", a: "Nuclear Fusion" }
+    { q: "What process powers main sequence stars by converting hydrogen into helium?", a: "Nuclear Fusion" },
+    { q: "What is the closest star to Earth after the Sun?", a: "Proxima Centauri" },
+    { q: "What planet in our solar system has the most moons?", a: "Saturn" },
+    { q: "What is the name of the largest volcano in the solar system, located on Mars?", a: "Olympus Mons" },
+    { q: "What galaxy is on a collision course with the Milky Way?", a: "Andromeda" },
+    { q: "What is the name of NASA's most powerful space telescope launched in 2021?", a: "James Webb" },
+    { q: "What phenomenon occurs when a star's light bends around a massive object?", a: "Gravitational Lensing" },
+    { q: "What is the boundary around a black hole beyond which nothing can escape?", a: "Event Horizon" },
+    { q: "What planet is known as the 'Morning Star' or 'Evening Star'?", a: "Venus" },
+    { q: "What type of galaxy has a spiral shape with a bar-shaped center?", a: "Barred Spiral" },
+    { q: "What is the unit of distance equal to about 3.26 light-years?", a: "Parsec" },
+    { q: "What is the name of Jupiter's largest moon, also the largest in the solar system?", a: "Ganymede" },
+    { q: "What invisible substance makes up about 27% of the universe?", a: "Dark Matter" },
+    { q: "What is the term for a rocky body orbiting the Sun, mostly found between Mars and Jupiter?", a: "Asteroid" },
+    { q: "What is the outermost layer of the Sun's atmosphere called?", a: "Corona" },
+    { q: "What space probe was the first human-made object to enter interstellar space?", a: "Voyager 1" },
+    { q: "What is the hottest planet in our solar system?", a: "Venus" },
+    { q: "What is the name of the dwarf planet discovered beyond Pluto in 2005?", a: "Eris" },
+    { q: "What type of radiation makes up most of the cosmic microwave background?", a: "Microwave" },
+    { q: "What is the term for two stars that orbit each other?", a: "Binary Star" },
+    { q: "What element is the most abundant in the universe?", a: "Hydrogen" }
   ];
   let currentQuestions = [];
   let nextLevelCallback = null;
   let onCorrectQuizCallback = null;
 
   window.addEventListener('keydown', (e) => { initAudio();
+    if (e.key === 'p' || e.key === 'P') {
+       if (gameState.startsWith('LEVEL_') || gameState === 'TRAITOR_BOSS') {
+          isPaused = !isPaused;
+          if (!isPaused) {
+             lastTime = performance.now();
+          }
+          return;
+       }
+    }
     if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) {
       if (gameState !== 'QUIZ' && gameState !== 'START') e.preventDefault(); 
     }
@@ -1606,7 +1637,7 @@ function initFlightGame() {
   quizSubmit.addEventListener('click', checkQuizAnswer);
 
   function resetGame() {
-    ship = { x: 400, y: 500, vx: 0, vy: 0, speed: 250, size: 20, health: 100, lives: 3, score: 0, powerup: null, powerupTime: 0 };
+    ship = { x: 400, y: 500, vx: 0, vy: 0, speed: 250, size: 20, health: 100, lives: 3, score: 0, powerup: null, powerupTime: 0, gameStartTime: 0, triviaCorrect: 0, triviaTotal: 0 };
     playerLasers = []; enemyLasers = []; entities = []; particles = [];
     currentQuestions = [...questionPool].sort(() => 0.5 - Math.random());
     updateHud();
@@ -1718,49 +1749,7 @@ function initFlightGame() {
        }, 200);
   }
 
-  
-  function startLevel6() {
-    gameState = 'LEVEL_6';
-    hudLevel.textContent = 'LEVEL 6: SOLAR WIND SLALOM';
-    hudObjective.textContent = 'SURVIVE THE CHAOTIC SOLAR WIND AND COLLECT 10 ENERGY CORES!';
-    setTimeout(() => { if (gameState === 'LEVEL_6') hudObjective.textContent = ''; }, 4000);
-    entities = []; playerLasers = []; enemyLasers = []; particles = [];
-    ship.x = 400; ship.y = 500; ship.vx = 0; ship.vy = 0;
-    ship.coresCollected = 0;
-  }
 
-  
-  function startTraitorDialogue() {
-    gameState = 'TRAITOR_DIALOGUE';
-    hudLevel.textContent = '';
-    hudObjective.textContent = '';
-  }
-
-  function startTraitorBoss() {
-    gameState = 'TRAITOR_BOSS';
-    hudLevel.textContent = 'LEVEL 6: HUMAN TRAITOR';
-    hudObjective.textContent = 'DEFEAT THE TRAITOR!';
-    entities = []; playerLasers = []; enemyLasers = [];
-    ship.x = 400; ship.y = 500; ship.vx = 0; ship.vy = 0;
-    entities.push({ type: 'traitor', x: 400, y: 100, hp: 200, maxHp: 200, size: 45 });
-  }
-
-  function startBossDialogue() {
-    gameState = 'BOSS_DIALOGUE';
-    hudLevel.textContent = '';
-    hudObjective.textContent = '';
-  }
-
-  function startLevel7() {
-       gameState = 'LEVEL_7';
-       hudLevel.textContent = 'LEVEL 7: ORBITAL BOMBARDMENT';
-       hudObjective.textContent = 'A/D to Move. SPACE to Bomb! Eradicate 100 Xenomorphs!';
-       ship.x = canvas.width / 2; ship.y = 50;
-       ship.health = 100; ship.kills = 0;
-       entities = []; particles = []; playerLasers = [];
-       setTimeout(() => { if (gameState === 'LEVEL_7') hudObjective.textContent = ''; }, 5000);
-       playHeavyMetalTheme();
-  }
 
   
   const cosmologyQuestions = [
@@ -1776,15 +1765,37 @@ function initFlightGame() {
     { q: "What is the name of our galaxy?", a: ["Andromeda", "Milky Way", "Triangulum", "Sombrero"], c: 1 }
   ];
 
+  let lastJumpscareImage = '';
+
   function triggerJumpscareAndQuiz(nextCallback) {
     playSound('jumpscare');
     gameState = 'JUMPSCARE';
     nextLevelCallback = nextCallback;
     onCorrectQuizCallback = null;
     
-    const jumpscareImages = ['assets/jumpscare.png', 'assets/jumpscare_grey.png', 'assets/jumpscare_nordic.png', 'assets/jumpscare_mantis.png', 'assets/jumpscare_reptilian.png'];
+    const jumpscareImages = ['assets/jumpscare.png', 'assets/jumpscare_grey.png', 'assets/jumpscare_nordic.png', 'assets/jumpscare_mantis.png', 'assets/jumpscare_reptilian.png', 'assets/jumpscare_cybernetic.png', 'assets/jumpscare_deepsea.png', 'assets/jumpscare_shadow.png', 'assets/jumpscare_crystal.png'];
+    
+    if (jumpscareDeck.length === 0) {
+       let attempts = 0;
+       do {
+          jumpscareDeck = [...jumpscareImages];
+          for (let i = jumpscareDeck.length - 1; i > 0; i--) {
+             const j = Math.floor(Math.random() * (i + 1));
+             [jumpscareDeck[i], jumpscareDeck[j]] = [jumpscareDeck[j], jumpscareDeck[i]];
+          }
+          attempts++;
+       } while (jumpscareDeck[jumpscareDeck.length - 1] === lastJumpscareImage && attempts < 10);
+    }
+    
+    if (jumpscareDeck.length > 1 && jumpscareDeck[jumpscareDeck.length - 1] === lastJumpscareImage) {
+       [jumpscareDeck[jumpscareDeck.length - 1], jumpscareDeck[0]] = [jumpscareDeck[0], jumpscareDeck[jumpscareDeck.length - 1]];
+    }
+    
+    const chosen = jumpscareDeck.pop();
+    lastJumpscareImage = chosen;
+    
     const imgEl = jumpscareOverlay.querySelector('img');
-    if (imgEl) imgEl.src = jumpscareImages[Math.floor(Math.random() * jumpscareImages.length)];
+    if (imgEl) imgEl.src = chosen;
     
     jumpscareOverlay.hidden = false;
     setTimeout(() => openQuizModal(false), 800);
@@ -1793,11 +1804,15 @@ function initFlightGame() {
   function triggerTriviaPowerup() {
     let savedState = gameState;
     gameState = 'QUIZ';
+    ship.triviaTotal++;
     onCorrectQuizCallback = () => {
+       ship.triviaCorrect++;
+       ship.score += 5000;
        ship.powerup = 'spread'; ship.powerupTime = 10;
        gameState = savedState;
-       hudObjective.textContent = 'POWERUP ACTIVATED: SPREAD SHOT!';
+       hudObjective.textContent = 'POWERUP + 5000 PTS! SPREAD SHOT!';
        setTimeout(() => { hudObjective.textContent = ''; }, 2000);
+       updateHud();
        lastTime = performance.now();
        requestAnimationFrame(gameLoop);
     };
@@ -1863,6 +1878,7 @@ function initFlightGame() {
     setTimeout(() => { if (gameState === 'LEVEL_1') hudObjective.textContent = ''; }, 3000);
     entities = []; playerLasers = []; enemyLasers = [];
     ship.x = 400; ship.y = 500; ship.vx = 0; ship.vy = 0;
+    ship.gameStartTime = Date.now();
     
     playLevel1SynthTheme();
     
@@ -1904,9 +1920,40 @@ function initFlightGame() {
     setTimeout(() => { if (gameState === 'LEVEL_3') hudObjective.textContent = ''; }, 4000);
     entities = []; playerLasers = []; enemyLasers = [];
     ship.x = 200; ship.y = 550; ship.vx = 100; ship.vy = -150;
-    entities.push({ type: 'planet', x: 400, y: 350, r: 50, m: 35000, color: '#33aa55' });
-    entities.push({ type: 'planet', x: 200, y: 150, r: 60, m: 40000, color: '#5533aa' });
-    entities.push({ type: 'planet', x: 600, y: 200, r: 40, m: 25000, color: '#aa3355' });
+    entities.push({
+      type: 'planet',
+      x: 400,
+      y: 350,
+      r: 50,
+      m: 35000,
+      color: '#33aa55',
+      moons: [
+        { orbitR: 85, moonR: 8, speed: 0.0015, color: '#88ccaa', initialAngle: 0 },
+        { orbitR: 120, moonR: 6, speed: -0.001, color: '#aaccaa', initialAngle: Math.PI }
+      ]
+    });
+    entities.push({
+      type: 'planet',
+      x: 200,
+      y: 150,
+      r: 60,
+      m: 40000,
+      color: '#5533aa',
+      moons: [
+        { orbitR: 100, moonR: 10, speed: 0.0008, color: '#9988dd', initialAngle: Math.PI / 2 }
+      ]
+    });
+    entities.push({
+      type: 'planet',
+      x: 600,
+      y: 200,
+      r: 40,
+      m: 25000,
+      color: '#aa3355',
+      moons: [
+        { orbitR: 70, moonR: 6, speed: 0.002, color: '#dd8899', initialAngle: Math.PI * 1.5 }
+      ]
+    });
   }
 
   function startLevel4() {
@@ -1982,7 +2029,19 @@ function initFlightGame() {
     setTimeout(() => { if (gameState === 'LEVEL_7') hudObjective.textContent = ''; }, 4000);
     entities = []; playerLasers = []; enemyLasers = [];
     ship.x = 400; ship.y = 500; ship.vx = 0; ship.vy = 0;
-    entities.push({ type: 'boss', x: 400, y: 150, size: 60, hp: 300, maxHp: 300 });
+    ship.minionTimer = 0;
+    entities.push({ 
+       type: 'boss', 
+       x: 400, 
+       y: 150, 
+       size: 60, 
+       hp: 300, 
+       maxHp: 300,
+       bossState: 'idle',
+       stateTimer: 2.0,
+       chargeVx: 0,
+       chargeVy: 0
+    });
   }
 
   
@@ -2030,6 +2089,32 @@ function initFlightGame() {
 
     
     if (win) {
+        // Calculate end-game bonuses
+        let baseScore = ship.score;
+        let elapsedSeconds = (Date.now() - ship.gameStartTime) / 1000;
+        let speedBonus = Math.max(0, Math.floor(300000 - elapsedSeconds * 500));
+        let healthBonus = Math.floor(ship.health * 1000);
+        let livesBonus = Math.floor(ship.lives * 50000);
+        let triviaBonus = ship.triviaCorrect * 5000;
+        let perfectTrivia = (ship.triviaCorrect === ship.triviaTotal && ship.triviaTotal >= 3) ? 25000 : 0;
+        
+        let totalBonus = speedBonus + healthBonus + livesBonus + triviaBonus + perfectTrivia;
+        ship.score += totalBonus;
+        
+        // Store breakdown for victory cinematic rendering
+        window.scoreBreakdown = {
+            baseScore: baseScore,
+            speedBonus: speedBonus,
+            healthBonus: healthBonus,
+            livesBonus: livesBonus,
+            triviaBonus: triviaBonus,
+            perfectTrivia: perfectTrivia,
+            finalScore: ship.score,
+            elapsedSeconds: Math.floor(elapsedSeconds),
+            triviaCorrect: ship.triviaCorrect,
+            triviaTotal: ship.triviaTotal
+        };
+
         gameState = 'VICTORY_CINEMATIC';
         if (!window.victoryAudioPlayed) {
             playVictorySynth();
@@ -2047,19 +2132,10 @@ function initFlightGame() {
     gameState = 'GAME_OVER';
 
     gameHud.hidden = true;
-    overlayTitle.textContent = win ? "MISSION ACCOMPLISHED!" : "GAME OVER";
-    overlayText.textContent = win ? `You conquered the cosmos with Score: ${ship.score}` : "Your ship was destroyed.";
+    overlayTitle.textContent = "GAME OVER";
+    overlayText.textContent = "Your ship was destroyed.";
     startBtn.textContent = "PLAY AGAIN";
     
-    if (win) {
-        leaderboard.push({ name: currentPlayerName, score: ship.score });
-        if (window.db) {
-          window.addDoc(window.collection(window.db, "leaderboard"), {
-            name: currentPlayerName,
-            score: ship.score
-          });
-        }
-    }
     updateLeaderboardUI();
     
     const nameInput = document.getElementById('player-name-input');
@@ -2073,44 +2149,181 @@ function initFlightGame() {
   function drawShip(x, y) {
     if (ship.health <= 0) return;
     if (ship.isInvulnerable && Math.floor(performance.now() / 150) % 2 === 0) return;
-    ctx.fillStyle = '#cccccc'; ctx.fillRect(x - 10, y, 20, 20); 
-    ctx.fillStyle = '#ff3333'; ctx.fillRect(x - 15, y + 10, 5, 15); ctx.fillRect(x + 10, y + 10, 5, 15); 
-    ctx.fillStyle = '#66ccff'; ctx.fillRect(x - 5, y - 5, 10, 10); 
-    if ((keys['ArrowUp'] || keys['w']) && gameState !== 'LEVEL_3') {
-      ctx.fillStyle = '#ffaa00';
-      ctx.fillRect(x - 6, y + 20, 4, Math.random()*10 + 5);
-      ctx.fillRect(x + 2, y + 20, 4, Math.random()*10 + 5);
-    }
+
+    // Thruster exhaust trail (plasma flame)
+    const isMoving = keys['ArrowUp'] || keys['w'] || keys['ArrowLeft'] || keys['a'] || keys['ArrowRight'] || keys['d'];
+    const flameHeight = isMoving ? Math.random() * 15 + 10 : Math.random() * 6 + 3;
+    
+    let engineGrad = ctx.createLinearGradient(x, y + 15, x, y + 15 + flameHeight);
+    engineGrad.addColorStop(0, '#ff33cc'); // hot bright pink flame to match bullet!
+    engineGrad.addColorStop(0.5, '#ffaa00'); // orange
+    engineGrad.addColorStop(1, 'rgba(255, 0, 0, 0)');
+    ctx.fillStyle = engineGrad;
+    ctx.beginPath();
+    ctx.moveTo(x - 6, y + 15);
+    ctx.lineTo(x + 6, y + 15);
+    ctx.lineTo(x, y + 15 + flameHeight);
+    ctx.closePath();
+    ctx.fill();
+
+    // Secondary engines on wings
+    ctx.beginPath();
+    ctx.moveTo(x - 14, y + 12);
+    ctx.lineTo(x - 10, y + 12);
+    ctx.lineTo(x - 12, y + 12 + flameHeight * 0.6);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 10, y + 12);
+    ctx.lineTo(x + 14, y + 12);
+    ctx.lineTo(x + 12, y + 12 + flameHeight * 0.6);
+    ctx.closePath();
+    ctx.fill();
+
+    // Wings (Dark grey slate metal base)
+    ctx.fillStyle = '#34495e';
+    ctx.beginPath();
+    ctx.moveTo(x - 18, y + 10);
+    ctx.lineTo(x - 8, y + 2);
+    ctx.lineTo(x, y - 5);
+    ctx.lineTo(x + 8, y + 2);
+    ctx.lineTo(x + 18, y + 10);
+    ctx.lineTo(x + 15, y + 14);
+    ctx.lineTo(x - 15, y + 14);
+    ctx.closePath();
+    ctx.fill();
+
+    // Wingtips / Laser cannons (Bright pink accents)
+    ctx.fillStyle = '#ff33cc'; 
+    ctx.fillRect(x - 19, y, 3, 12);
+    ctx.fillRect(x + 16, y, 3, 12);
+
+    // Fuselage / Central Nose cone (Light futuristic silver)
+    let bodyGrad = ctx.createLinearGradient(x - 8, y, x + 8, y);
+    bodyGrad.addColorStop(0, '#bdc3c7');
+    bodyGrad.addColorStop(0.5, '#ecf0f1');
+    bodyGrad.addColorStop(1, '#95a5a6');
+    ctx.fillStyle = bodyGrad;
+    ctx.beginPath();
+    ctx.moveTo(x - 8, y + 15);
+    ctx.lineTo(x - 5, y - 12);
+    ctx.lineTo(x, y - 20); // nose tip
+    ctx.lineTo(x + 5, y - 12);
+    ctx.lineTo(x + 8, y + 15);
+    ctx.closePath();
+    ctx.fill();
+
+    // Canopy / Cockpit (Neon Cyan glass shield)
+    ctx.fillStyle = '#00f2fe';
+    ctx.beginPath();
+    ctx.moveTo(x - 4, y - 2);
+    ctx.lineTo(x, y - 10);
+    ctx.lineTo(x + 4, y - 2);
+    ctx.lineTo(x + 3, y + 6);
+    ctx.lineTo(x - 3, y + 6);
+    ctx.closePath();
+    ctx.fill();
+
+    // Cockpit highlight
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x - 2, y - 4, 2, 4);
+
+    // Shield bubble if powered up
     if (ship.powerup) {
-      ctx.strokeStyle = '#00ffff'; ctx.beginPath(); ctx.arc(x, y, 25, 0, Math.PI*2); ctx.stroke();
+      ctx.strokeStyle = '#00ffff';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = '#00ffff';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(x, y, 26, 0, Math.PI*2);
+      ctx.stroke();
+      ctx.shadowBlur = 0; // reset
     }
   }
 
   function drawBoss(x, y, hp, maxHp) {
-    // Spaghetti Monster Body (Meatballs)
-    ctx.fillStyle = '#8B4513'; // brown
-    ctx.beginPath(); ctx.arc(x - 20, y - 10, 25, 0, Math.PI*2); ctx.fill(); // left meatball
-    ctx.beginPath(); ctx.arc(x + 20, y - 10, 25, 0, Math.PI*2); ctx.fill(); // right meatball
-    
-    // Pasta tentacles / spikes
-    ctx.strokeStyle = '#FFD700'; // gold/yellow pasta
-    ctx.lineWidth = 4;
+    // gold/yellow pasta whip-like tentacles (longer, waving)
+    ctx.strokeStyle = '#ADFF2F'; // disgusting slimy green-yellow color
+    ctx.lineWidth = 5;
     for (let i = 0; i < 12; i++) {
         ctx.beginPath();
-        let angle = (i / 12) * Math.PI * 2 + (Date.now() * 0.005);
+        let angle = (i / 12) * Math.PI * 2 + (Date.now() * 0.007);
+        // Tentacle length oscillates to look like a whip stretching
+        let whipLength = 110 + Math.sin(Date.now() * 0.015 + i) * 35; // ranges between 75 and 145
         ctx.moveTo(x, y);
-        ctx.quadraticCurveTo(x + Math.cos(angle)*60, y + Math.sin(angle)*60, x + Math.cos(angle + 0.5)*80, y + Math.sin(angle + 0.5)*80);
+        ctx.quadraticCurveTo(
+            x + Math.cos(angle) * (whipLength * 0.6), 
+            y + Math.sin(angle) * (whipLength * 0.6), 
+            x + Math.cos(angle + 0.6) * whipLength, 
+            y + Math.sin(angle + 0.6) * whipLength
+        );
         ctx.stroke();
     }
+
+    // Left and right meatballs (disgusting green-brown slimy flesh)
+    ctx.fillStyle = '#5c633c'; // Sickly green-brown
+    ctx.beginPath(); ctx.arc(x - 20, y - 10, 28, 0, Math.PI*2); ctx.fill(); // left meatball
+    ctx.beginPath(); ctx.arc(x + 20, y - 10, 28, 0, Math.PI*2); ctx.fill(); // right meatball
     
-    // Eyes on stalks
+    // Dripping green slime drops
+    ctx.fillStyle = 'rgba(173, 255, 47, 0.7)'; // translucent slime
+    for (let i = 0; i < 3; i++) {
+        let dropY = y + 10 + ((Date.now() * 0.05 + i * 20) % 30);
+        let dropX = x + (i - 1) * 15;
+        ctx.fillRect(dropX - 2, dropY, 4, 8);
+        ctx.beginPath(); ctx.arc(dropX, dropY + 8, 3, 0, Math.PI*2); ctx.fill();
+    }
+
+    // Exaggerated red lipstick lips (huge smiling mouth of a woman, no teeth)
+    ctx.fillStyle = '#ff003c'; // Vibrant bright red lipstick
+    ctx.strokeStyle = '#8b0000'; // Dark red outline
+    ctx.lineWidth = 3;
+    
+    // Upper lip with Cupid's bow
+    ctx.beginPath();
+    ctx.moveTo(x - 25, y + 5);
+    ctx.quadraticCurveTo(x - 12, y - 8, x - 6, y - 2);
+    ctx.quadraticCurveTo(x, y + 2, x + 6, y - 2);
+    ctx.quadraticCurveTo(x + 12, y - 8, x + 25, y + 5);
+    ctx.quadraticCurveTo(x, y + 10, x - 25, y + 5);
+    ctx.fill();
+    ctx.stroke();
+
+    // Lower lip
+    ctx.beginPath();
+    ctx.moveTo(x - 25, y + 5);
+    ctx.quadraticCurveTo(x, y + 30, x + 25, y + 5);
+    ctx.quadraticCurveTo(x, y + 12, x - 25, y + 5);
+    ctx.fill();
+    ctx.stroke();
+
+    // Smiling mouth cavity void (no teeth)
+    ctx.fillStyle = '#6b001a';
+    ctx.beginPath();
+    ctx.moveTo(x - 21, y + 6);
+    ctx.quadraticCurveTo(x, y + 24, x + 21, y + 6);
+    ctx.quadraticCurveTo(x, y + 9, x - 21, y + 6);
+    ctx.fill();
+    
+    // Animated Popping Eyes on Stalks
+    let eyeOsc = Math.sin(Date.now() * 0.006); // Smooth wave
+    let stalkHeight = 60 + eyeOsc * 20;        // Stalk length oscillates between 40 and 80
+    let eyeRad = 10 + eyeOsc * 3;              // Eye size oscillates between 7 and 13
+    
     ctx.strokeStyle = '#FFD700'; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(x - 10, y - 20); ctx.lineTo(x - 30, y - 60); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x + 10, y - 20); ctx.lineTo(x + 30, y - 60); ctx.stroke();
-    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(x - 30, y - 60, 10, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x + 30, y - 60, 10, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#000000'; ctx.beginPath(); ctx.arc(x - 30, y - 60, 4, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x + 30, y - 60, 4, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x - 10, y - 20); ctx.lineTo(x - 30, y - stalkHeight); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + 10, y - 20); ctx.lineTo(x + 30, y - stalkHeight); ctx.stroke();
+    
+    ctx.fillStyle = '#ffffff'; 
+    ctx.beginPath(); ctx.arc(x - 30, y - stalkHeight, eyeRad, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 30, y - stalkHeight, eyeRad, 0, Math.PI*2); ctx.fill();
+    
+    ctx.fillStyle = '#000000'; 
+    ctx.beginPath(); ctx.arc(x - 30, y - stalkHeight, eyeRad * 0.4, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 30, y - stalkHeight, eyeRad * 0.4, 0, Math.PI*2); ctx.fill();
+
+
 
     // Health bar
     ctx.fillStyle = '#333'; ctx.fillRect(x - 50, y - 100, 100, 10);
@@ -2122,6 +2335,20 @@ function initFlightGame() {
 
 
   function gameLoop(timestamp) {
+    if (isPaused) {
+      ctx.fillStyle = 'rgba(0,0,0,0.15)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '24px "Press Start 2P", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText("PAUSED", canvas.width / 2, canvas.height / 2);
+      ctx.font = '12px "Press Start 2P", monospace';
+      ctx.fillText("Press P to Resume", canvas.width / 2, canvas.height / 2 + 40);
+      ctx.textAlign = 'left';
+      lastTime = timestamp;
+      requestAnimationFrame(gameLoop);
+      return;
+    }
     if (!gameState.startsWith('LEVEL_') && gameState !== 'TRANSITION' && gameState !== 'BOSS_DIALOGUE' && gameState !== 'VICTORY_CINEMATIC' && gameState !== 'TRAITOR_DIALOGUE' && gameState !== 'TRAITOR_BOSS') {
       if (gameState !== 'START' && gameState !== 'GAME_OVER' && gameState !== 'VICTORY') {
         lastTime = timestamp; 
@@ -2354,18 +2581,77 @@ function initFlightGame() {
        }
        
        if (gameState === 'VICTORY_CINEMATIC') {
-           if (!window.victoryImg) { window.victoryImg = new Image(); window.victoryImg.src = 'assets/victory_bg.png'; }
-           if (window.victoryImg.complete) ctx.drawImage(window.victoryImg, 0, 0, canvas.width, canvas.height);
-           
-           ctx.fillStyle = 'rgba(0,0,0,0.5)';
-           ctx.fillRect(0, 0, canvas.width, 100);
-           ctx.fillStyle = '#0f0'; ctx.font = '24px "Press Start 2P", monospace';
-           ctx.textAlign = 'center';
-           ctx.fillText("MISSION ACCOMPLISHED!", canvas.width/2, 50);
-           ctx.fillStyle = '#fff'; ctx.font = '16px "Press Start 2P", monospace';
-           ctx.fillText("Score: " + ship.score, canvas.width/2, 80);
-           ctx.textAlign = 'left';
-       }
+            if (!window.victoryImg) { window.victoryImg = new Image(); window.victoryImg.src = 'assets/victory_bg.png'; }
+            if (window.victoryImg.complete) ctx.drawImage(window.victoryImg, 0, 0, canvas.width, canvas.height);
+            
+            // Dark overlay panel for score breakdown
+            let panelX = canvas.width/2 - 300;
+            let panelY = 30;
+            let panelW = 600;
+            let panelH = 440;
+            ctx.fillStyle = 'rgba(0,0,0,0.85)';
+            ctx.fillRect(panelX, panelY, panelW, panelH);
+            ctx.strokeStyle = '#0f0';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(panelX, panelY, panelW, panelH);
+            
+            // Title
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#0f0'; ctx.font = '22px "Press Start 2P", monospace';
+            ctx.fillText("MISSION ACCOMPLISHED!", canvas.width/2, panelY + 40);
+            
+            // Score breakdown
+            let sb = window.scoreBreakdown || {};
+            let lineY = panelY + 80;
+            let lineH = 32;
+            ctx.font = '12px "Press Start 2P", monospace';
+            ctx.textAlign = 'left';
+            let labelX = panelX + 30;
+            let valueX = panelX + panelW - 30;
+            
+            function drawScoreLine(label, value, color) {
+                ctx.fillStyle = color || '#ccc';
+                ctx.textAlign = 'left';
+                ctx.fillText(label, labelX, lineY);
+                ctx.textAlign = 'right';
+                ctx.fillText(String(value).padStart(9, ' '), valueX, lineY);
+                lineY += lineH;
+            }
+            
+            // Time display
+            let mins = Math.floor((sb.elapsedSeconds || 0) / 60);
+            let secs = (sb.elapsedSeconds || 0) % 60;
+            ctx.fillStyle = '#888'; ctx.textAlign = 'center';
+            ctx.font = '10px "Press Start 2P", monospace';
+            ctx.fillText('TIME: ' + mins + 'm ' + secs + 's  |  TRIVIA: ' + (sb.triviaCorrect||0) + '/' + (sb.triviaTotal||0), canvas.width/2, lineY);
+            lineY += lineH + 5;
+            
+            ctx.font = '12px "Press Start 2P", monospace';
+            drawScoreLine("BASE SCORE", (sb.baseScore||0).toLocaleString(), '#fff');
+            drawScoreLine("SPEED BONUS", '+' + (sb.speedBonus||0).toLocaleString(), '#00ffff');
+            drawScoreLine("HEALTH BONUS", '+' + (sb.healthBonus||0).toLocaleString(), '#00ff00');
+            drawScoreLine("LIVES BONUS", '+' + (sb.livesBonus||0).toLocaleString(), '#ffcc00');
+            drawScoreLine("TRIVIA BONUS", '+' + (sb.triviaBonus||0).toLocaleString(), '#ff66ff');
+            if (sb.perfectTrivia > 0) {
+                drawScoreLine("PERFECT TRIVIA!", '+' + sb.perfectTrivia.toLocaleString(), '#ff0');
+            }
+            
+            // Divider line
+            lineY += 5;
+            ctx.strokeStyle = '#0f0'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(labelX, lineY); ctx.lineTo(valueX, lineY); ctx.stroke();
+            lineY += lineH;
+            
+            // Final score
+            ctx.font = '16px "Press Start 2P", monospace';
+            ctx.fillStyle = '#0f0';
+            ctx.textAlign = 'left';
+            ctx.fillText("FINAL SCORE", labelX, lineY);
+            ctx.textAlign = 'right';
+            ctx.fillText(String(sb.finalScore||0).toLocaleString(), valueX, lineY);
+            
+            ctx.textAlign = 'left';
+        }
 
        if (ship.health > 0 && gameState !== 'TRANSITION' && gameState !== 'BOSS_DIALOGUE' && gameState !== 'VICTORY_CINEMATIC' && gameState !== 'TRAITOR_DIALOGUE') {
          if (gameState === 'LEVEL_3') {
@@ -2481,133 +2767,41 @@ function initFlightGame() {
          if (gameState === 'LEVEL_3') {
             ship.y = Math.min(canvas.height - 20, ship.y);
          } else if (gameState === 'LEVEL_7') {
-           // Cratered Landscape Background (Top-Down)
-           ctx.fillStyle = '#331111'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-           ctx.fillStyle = '#220000';
-           ctx.beginPath(); ctx.arc(150, 300, 80, 0, Math.PI*2); ctx.fill();
-           ctx.beginPath(); ctx.arc(500, 450, 120, 0, Math.PI*2); ctx.fill();
-           ctx.beginPath(); ctx.arc(700, 150, 60, 0, Math.PI*2); ctx.fill();
-           
-           // Movement mechanic (Bomb Nozzle)
-           if (keys['ArrowLeft'] || keys['a']) ship.x -= 300 * dt;
-           if (keys['ArrowRight'] || keys['d']) ship.x += 300 * dt;
-           ship.x = Math.max(20, Math.min(canvas.width - 20, ship.x));
-           
-           // Bomb Dropping
-           if (keys[' '] && shootCooldown <= 0) {
-              // Add bomb
-              playerLasers.push({ type: 'bomb', x: ship.x, y: ship.y, size: 10, vy: 400 });
-              playSound('laser'); // or a drop sound
-              shootCooldown = 0.4;
-           }
-           if (shootCooldown > 0) shootCooldown -= dt;
-           
-           // Spawn Horde (Swarming everywhere below y=150)
-           levelTimer += dt;
-           if (levelTimer > 0.2) {
-              levelTimer = 0;
-              let side = Math.random() > 0.5 ? -20 : canvas.width + 20;
-              let dir = side < 0 ? 1 : -1;
-              entities.push({ type: 'xeno', x: side, y: 150 + Math.random()*(canvas.height-150), hp: 20, vx: dir * (100 + Math.random()*150), vy: (Math.random()-0.5)*50 });
-           }
+            // Draw epic alien scenery background
+            if (!window.level7Bg) {
+               window.level7Bg = new Image();
+               window.level7Bg.src = 'assets/level7_bg.png';
+            }
+            if (window.level7Bg.complete) {
+               ctx.drawImage(window.level7Bg, 0, 0, canvas.width, canvas.height);
+            } else {
+               // Fallback: deep purple cosmic field with pink stars
+               ctx.fillStyle = '#0b001a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+               ctx.fillStyle = '#ff33cc';
+               for(let i=0; i<30; i++) {
+                  let sx = (Math.sin(i*123) * 1000 + 1000) % canvas.width;
+                  let sy = ((Math.cos(i*321) * 1000) + timestamp*0.1) % canvas.height;
+                  if (sy < 0) sy += canvas.height;
+                  ctx.fillRect(sx, sy, 1, 1);
+               }
+            }
 
-           // Draw Bomb Nozzle
-           if (ship.health > 0) {
-               ctx.save();
-               ctx.translate(ship.x, ship.y);
-               // High-tech nozzle
-               ctx.fillStyle = '#444'; ctx.beginPath(); ctx.arc(0, 0, 25, 0, Math.PI*2); ctx.fill();
-               ctx.fillStyle = '#222'; ctx.beginPath(); ctx.arc(0, 0, 15, 0, Math.PI*2); ctx.fill();
-               // Crosshair
-               ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 2;
-               ctx.beginPath(); ctx.moveTo(-35, 0); ctx.lineTo(35, 0); ctx.stroke();
-               ctx.beginPath(); ctx.moveTo(0, -35); ctx.lineTo(0, 35); ctx.stroke();
-               ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI*2); ctx.stroke();
-               ctx.restore();
-           }
-
-           // Entities Update & Draw
-           for (let i = entities.length - 1; i >= 0; i--) {
-              let e = entities[i];
-              if (e.type === 'xeno') {
-                  e.x += e.vx * dt;
-                  e.y += e.vy * dt;
-                  
-                  // Keep them roughly in bounds vertically
-                  if (e.y < 150) e.vy = Math.abs(e.vy);
-                  if (e.y > canvas.height) e.vy = -Math.abs(e.vy);
-                  
-                  // Remove if way off screen horizontally
-                  if (e.x < -100 || e.x > canvas.width + 100) { entities.splice(i, 1); continue; }
-                  
-                  // Draw Xenomorph Top-Down
-                  let angle = Math.atan2(e.vy, e.vx);
-                  ctx.save();
-                  ctx.translate(e.x, e.y);
-                  ctx.rotate(angle);
-                  
-                  // Tail
-                  ctx.strokeStyle = '#111111'; ctx.lineWidth = 3; ctx.lineCap = 'round';
-                  ctx.beginPath(); ctx.moveTo(-10, 0);
-                  let wiggle = Math.sin(timestamp * 0.02 + e.x) * 10;
-                  ctx.quadraticCurveTo(-20, wiggle, -30, 0); ctx.stroke();
-
-                  // Head/Body
-                  ctx.fillStyle = '#111111'; ctx.beginPath(); ctx.ellipse(0, 0, 15, 8, 0, 0, Math.PI*2); ctx.fill();
-                  ctx.fillStyle = '#cccccc'; ctx.fillRect(10, -2, 4, 4);
-                  ctx.strokeStyle = '#333333'; ctx.lineWidth = 2;
-                  ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(0, 8); ctx.stroke();
-                  ctx.beginPath(); ctx.moveTo(-5, -7); ctx.lineTo(-5, 7); ctx.stroke();
-                  ctx.restore();
-              }
-           }
-           
-           // Bombs Update
-           for (let i = playerLasers.length - 1; i >= 0; i--) {
-              let l = playerLasers[i];
-              if (l.type === 'bomb') {
-                  l.y += l.vy * dt;
-                  // Draw bomb falling
-                  ctx.fillStyle = '#555'; ctx.beginPath(); ctx.arc(l.x, l.y, l.size, 0, Math.PI*2); ctx.fill();
-                  ctx.fillStyle = '#f00'; ctx.beginPath(); ctx.arc(l.x, l.y, l.size/2, 0, Math.PI*2); ctx.fill();
-                  
-                  if (l.y > canvas.height) { // Hit ground
-                      // Explosion radius
-                      let blastRadius = 100;
-                      createExplosion(l.x, l.y, '#ff5500', 50);
-                      playSound('explosion');
-                      
-                      // Check kills
-                      for (let j = entities.length - 1; j >= 0; j--) {
-                         let e = entities[j];
-                         if (e.type === 'xeno' && Math.hypot(l.x - e.x, l.y - e.y) < blastRadius) {
-                            createExplosion(e.x, e.y, '#33ff33', 10);
-                            ship.score += 10000; ship.kills++; updateHud();
-                            entities.splice(j, 1);
-                            if (ship.kills >= 100) {
-                               hudObjective.textContent = 'INVASION ERADICATED! GALAXY SAVED!';
-                               gameState = 'TRANSITION';
-                               setTimeout(() => gameOver(true), 4000);
-                            }
-                         }
-                      }
-                      playerLasers.splice(i, 1);
-                  }
-              }
-           }
-           
-           // Draw particles
-           for (let i = particles.length - 1; i >= 0; i--) {
-              let p = particles[i];
-              p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt;
-              if (p.life <= 0) particles.splice(i, 1);
-              else { ctx.fillStyle = p.color; ctx.globalAlpha = p.life; ctx.fillRect(p.x, p.y, 4, 4); ctx.globalAlpha = 1.0; }
-           }
-           
-           // HUD Overlay
-           ctx.fillStyle = '#0f0'; ctx.font = '16px "Press Start 2P", monospace'; ctx.textAlign='left';
-           ctx.fillText(`Kills: ${ship.kills}/100`, 20, 40);
-
+            // Spawn tracking alien minions during final boss fight
+            if (!ship.minionTimer) ship.minionTimer = 0;
+            ship.minionTimer += dt;
+            if (ship.minionTimer > 4.0) {
+               ship.minionTimer = 0;
+               entities.push({ 
+                  type: 'alien', 
+                  x: Math.random() * canvas.width, 
+                  y: -20, 
+                  size: 15, 
+                  hp: 10, 
+                  speed: 120, // slightly slower than standard for dodgeability
+                  jitterX: Math.random() * 10, 
+                  jitterY: Math.random() * 10 
+               });
+            }
          } else {
             ship.y = Math.max(20, Math.min(canvas.height - 20, ship.y));
          }
@@ -2622,22 +2816,68 @@ function initFlightGame() {
          }
          if (shootCooldown > 0) shootCooldown -= dt;
 
-         if (gameState !== 'LEVEL_7') drawShip(ship.x, ship.y);
+         drawShip(ship.x, ship.y);
        }
 
-       // Lasers
-       ctx.fillStyle = '#00ff00';
-       for (let i = playerLasers.length - 1; i >= 0; i--) {
-         let l = playerLasers[i];
-         l.y -= 500 * dt; l.x += (l.vx || 0) * dt;
-         ctx.fillRect(l.x - 2, l.y, 4, 15);
-         if (l.y < 0) playerLasers.splice(i, 1);
-       }
+        // Lasers (Bright Aqua glowing lightsaber bullets)
+        ctx.fillStyle = '#ffffff'; // White core
+        ctx.shadowColor = '#00f6ff'; // Neon aqua glow
+        ctx.shadowBlur = 8;
+        for (let i = playerLasers.length - 1; i >= 0; i--) {
+          let l = playerLasers[i];
+          l.y -= 500 * dt; l.x += (l.vx || 0) * dt;
+          ctx.fillRect(l.x - 2, l.y, 4, 15);
+          if (l.y < 0) playerLasers.splice(i, 1);
+        }
+        ctx.shadowBlur = 0; // reset shadow glow
 
-       ctx.fillStyle = '#ff00ff';
        for (let i = enemyLasers.length - 1; i >= 0; i--) {
          let l = enemyLasers[i];
-         l.y += 300 * dt; ctx.fillRect(l.x - 2, l.y, 4, 15);
+         l.y += (l.vy !== undefined ? l.vy : 300) * dt;
+         l.x += (l.vx || 0) * dt;
+         
+         if (l.type === 'saliva') {
+            ctx.save();
+            ctx.translate(l.x, l.y);
+            ctx.fillStyle = '#dfc300'; // Toxic yellow poop color
+            
+            // Draw a coiled pile of poop / splat saliva
+            // Base tier
+            ctx.beginPath();
+            ctx.ellipse(0, 5, 12, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Middle tier
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 9, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Top tier
+            ctx.beginPath();
+            ctx.ellipse(0, -4, 6, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Pointy top curl
+            ctx.beginPath();
+            ctx.moveTo(-2, -6);
+            ctx.quadraticCurveTo(0, -11, 3, -9);
+            ctx.quadraticCurveTo(1, -6, 0, -5);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Toxic highlights (light yellow bubbles/slime dots)
+            ctx.fillStyle = '#ffff33';
+            ctx.beginPath();
+            ctx.arc(-4, -1, 1.5, 0, Math.PI*2);
+            ctx.arc(3, 4, 1, 0, Math.PI*2);
+            ctx.fill();
+            
+            ctx.restore();
+         } else {
+            ctx.fillStyle = l.color || '#ff00ff';
+            ctx.fillRect(l.x - 2, l.y, 4, 15);
+         }
+         
          if (!ship.isInvulnerable && Math.hypot(l.x - ship.x, l.y - ship.y) < ship.size) {
             ship.health -= 10; updateHud();
             createExplosion(ship.x, ship.y, '#ff0000', 10);
@@ -2717,6 +2957,37 @@ function initFlightGame() {
          else if (e.type === 'planet') {
             ctx.fillStyle = e.color; ctx.beginPath(); ctx.arc(e.x, e.y, e.r, 0, Math.PI*2); ctx.fill();
             ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.arc(e.x - e.r*0.2, e.y - e.r*0.2, e.r*0.8, 0, Math.PI*2); ctx.fill();
+
+            // Draw orbiting moons
+            if (e.moons) {
+               for (let moon of e.moons) {
+                  // Draw dashed orbit line
+                  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                  ctx.lineWidth = 1.5;
+                  ctx.setLineDash([4, 6]);
+                  ctx.beginPath();
+                  ctx.arc(e.x, e.y, moon.orbitR, 0, Math.PI*2);
+                  ctx.stroke();
+                  ctx.setLineDash([]); // reset line dash
+                  
+                  // Orbit math
+                  let angle = moon.initialAngle + timestamp * moon.speed;
+                  let mx = e.x + Math.cos(angle) * moon.orbitR;
+                  let my = e.y + Math.sin(angle) * moon.orbitR;
+                  
+                  // Moon body
+                  ctx.fillStyle = moon.color;
+                  ctx.beginPath();
+                  ctx.arc(mx, my, moon.moonR, 0, Math.PI*2);
+                  ctx.fill();
+                  
+                  // Moon shadow detail
+                  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+                  ctx.beginPath();
+                  ctx.arc(mx - moon.moonR * 0.2, my - moon.moonR * 0.2, moon.moonR * 0.8, 0, Math.PI*2);
+                  ctx.fill();
+               }
+            }
          }
          else if (e.type === 'alien') {
             let angle = Math.atan2(ship.y - e.y, ship.x - e.x);
@@ -2726,6 +2997,17 @@ function initFlightGame() {
             ctx.fillStyle = '#000000'; ctx.fillRect(e.x-8, e.y-5, 4, 4); ctx.fillRect(e.x+4, e.y-5, 4, 4);
             if (Math.random() < 0.01 * dt * 60) enemyLasers.push({ x: e.x, y: e.y + 10 });
             
+            // Contact damage with player ship
+            if (!ship.isInvulnerable && Math.hypot(ship.x - e.x, ship.y - e.y) < ship.size + (e.size || 15)) {
+                ship.health -= 15;
+                updateHud();
+                createExplosion(ship.x, ship.y, '#ff0000', 10);
+                playSound('explosion');
+                ship.isInvulnerable = true;
+                ship.invulnerableTime = 1.5;
+                if (ship.health <= 0) handleDeath();
+            }
+
             for (let j = playerLasers.length - 1; j >= 0; j--) {
                if (Math.hypot(playerLasers[j].x - e.x, playerLasers[j].y - e.y) < e.size) {
                   playerLasers.splice(j, 1); e.hp -= 10;
@@ -2803,23 +3085,98 @@ function initFlightGame() {
               continue;
           }
 
-         if (e.type === 'boss') {
-            e.x += Math.sin(timestamp * 0.005) * 400 * dt; // Much faster, wilder movement
-            drawBoss(e.x, e.y, e.hp, e.maxHp);
-            if (Math.random() < 0.05 * dt * 60) enemyLasers.push({ x: e.x + (Math.random()-0.5)*80, y: e.y + 20 });
-            for (let j = playerLasers.length - 1; j >= 0; j--) {
-               if (Math.hypot(playerLasers[j].x - e.x, playerLasers[j].y - e.y) < e.size) {
-                  playerLasers.splice(j, 1); e.hp -= 2;
-                  if (e.hp <= 0) {
-                     createExplosion(e.x, e.y, '#ff00ff', 100); ship.score += 50000; updateHud();
-                     entities.splice(i, 1); gameState = 'TRANSITION';
-                     setTimeout(() => gameOver(true), 3000);
-                  }
-                  break;
-               }
-            }
-         }
+          if (e.type === 'boss') {
+             // State machine initialization if not present
+             if (!e.bossState) {
+                e.bossState = 'idle';
+                e.stateTimer = 2.0;
+                e.chargeVx = 0;
+                e.chargeVy = 0;
+             }
+
+             // Update state machine
+             if (e.bossState === 'idle') {
+                e.x += Math.sin(timestamp * 0.005) * 350 * dt; // hover left and right
+                e.y += (150 - e.y) * 2 * dt; // return to height y=150
+                e.stateTimer -= dt;
+                if (e.stateTimer <= 0) {
+                   if (Math.random() < 0.35) { // 35% chance to charge player
+                      e.bossState = 'charge';
+                      e.stateTimer = 1.0; // charge duration
+                      let dx = ship.x - e.x;
+                      let dy = ship.y - e.y;
+                      let dist = Math.hypot(dx, dy);
+                      if (dist > 0) {
+                         // Charge speed: 600 px/sec
+                         e.chargeVx = (dx / dist) * 600;
+                         e.chargeVy = (dy / dist) * 600;
+                      } else {
+                         e.chargeVx = 0; e.chargeVy = 600;
+                      }
+                   } else {
+                      e.stateTimer = Math.random() * 2 + 1; // wait 1-3 seconds
+                   }
+                }
+             } else if (e.bossState === 'charge') {
+                e.x += e.chargeVx * dt;
+                e.y += e.chargeVy * dt;
+                e.stateTimer -= dt;
+                if (e.stateTimer <= 0) {
+                   e.bossState = 'retreat';
+                   e.stateTimer = 1.5; // retreat duration
+                }
+             } else if (e.bossState === 'retreat') {
+                // Fly back up to top area smoothly
+                e.x += (400 - e.x) * 2 * dt;
+                e.y += (150 - e.y) * 3 * dt;
+                e.stateTimer -= dt;
+                if (e.stateTimer <= 0) {
+                   e.bossState = 'idle';
+                   e.stateTimer = Math.random() * 2 + 1;
+                }
+             }
+
+             // Clamp boss coordinates to keep it inside screen
+             e.x = Math.max(50, Math.min(canvas.width - 50, e.x));
+             e.y = Math.max(50, Math.min(canvas.height - 100, e.y));
+
+             drawBoss(e.x, e.y, e.hp, e.maxHp);
+             if (Math.random() < 0.06 * dt * 60) {
+                 enemyLasers.push({
+                     type: 'saliva',
+                     x: e.x + (Math.random() - 0.5) * 40,
+                     y: e.y + 20,
+                     vx: (Math.random() - 0.5) * 100,
+                     vy: 250 + Math.random() * 150
+                 });
+                 playSound('laser');
+             }
+             
+             // Contact damage with player ship
+             if (!ship.isInvulnerable && Math.hypot(ship.x - e.x, ship.y - e.y) < ship.size + e.size) {
+                 ship.health -= 20;
+                 updateHud();
+                 createExplosion(ship.x, ship.y, '#ff0000', 15);
+                 playSound('explosion');
+                 ship.isInvulnerable = true;
+                 ship.invulnerableTime = 1.5;
+                 if (ship.health <= 0) handleDeath();
+             }
+
+             for (let j = playerLasers.length - 1; j >= 0; j--) {
+                if (Math.hypot(playerLasers[j].x - e.x, playerLasers[j].y - e.y) < e.size) {
+                   playerLasers.splice(j, 1); e.hp -= 2;
+                   if (e.hp <= 0) {
+                      createExplosion(e.x, e.y, '#ff00ff', 100); ship.score += 50000; updateHud();
+                      entities.splice(i, 1); gameState = 'TRANSITION';
+                      setTimeout(() => gameOver(true), 3000);
+                   }
+                   break;
+                }
+             }
+          }
        }
+
 
        if (gameState === 'LEVEL_1' && !entities.some(e => e.type === 'alien')) {
          hudObjective.textContent = 'PLANET SECURED! WARPING...';
