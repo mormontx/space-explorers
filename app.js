@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initOrbitSimulator();
   initPlanetaryDig();
   initBlackHole();
+  initBlackHoleLensing();
   initGalaxyAnimations();
   initQACards();
   initFlightGame();
@@ -908,6 +909,236 @@ function initBlackHole() {
           drawPixel(ctx, snap(x, 2), snap(y, 2), p.size, diskColors[Math.max(0, heatIdx)]);
         }
       });
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
+}
+
+function initBlackHoleLensing() {
+  const canvas = document.getElementById('blackhole-lensing-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  setPixelMode(ctx);
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  let frame = 0;
+  let isVisible = false;
+  let mouseX = -100;
+  let mouseY = -100;
+  let mouseActive = false;
+
+  const observer = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+  }, { threshold: 0.1 });
+  observer.observe(canvas);
+
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+    mouseActive = true;
+  });
+  canvas.addEventListener('mouseleave', () => {
+    mouseActive = false;
+  });
+
+  const eventHorizonR = 40;
+  const photonSphereR = 60;
+
+  let photons = [];
+  const bgStars = [];
+  for (let i = 0; i < 80; i++) {
+    bgStars.push({
+      x: snap(Math.random() * canvas.width, 2),
+      y: snap(Math.random() * canvas.height, 2),
+      size: 2,
+      brightness: Math.random() > 0.5 ? 1 : 0.4
+    });
+  }
+
+  function spawnPhoton(x, y, vx, vy, color) {
+    photons.push({
+      x: x,
+      y: y,
+      vx: vx,
+      vy: vy,
+      speed: Math.hypot(vx, vy),
+      color: color || '#ffea00',
+      trail: [],
+      isActive: true
+    });
+  }
+
+  let absorptionParticles = [];
+  function createAbsorptionParticles(x, y, color) {
+     for (let i = 0; i < 8; i++) {
+        let angle = Math.random() * Math.PI * 2;
+        let speed = Math.random() * 40 + 20;
+        absorptionParticles.push({
+           x: x,
+           y: y,
+           vx: Math.cos(angle) * speed,
+           vy: Math.sin(angle) * speed,
+           life: 1.0,
+           color: color
+        });
+     }
+  }
+
+  function draw() {
+    if (!isVisible) { requestAnimationFrame(draw); return; }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setPixelMode(ctx);
+    frame++;
+
+    ctx.fillStyle = '#ffffff';
+    bgStars.forEach(s => {
+      let dx = s.x - cx;
+      let dy = s.y - cy;
+      let d = Math.hypot(dx, dy);
+      if (d < eventHorizonR) return;
+      
+      let alpha = s.brightness;
+      if (d < photonSphereR) alpha *= 0.3;
+      drawPixel(ctx, s.x, s.y, s.size, `rgba(255, 255, 255, ${alpha})`);
+    });
+
+    ctx.strokeStyle = 'rgba(170, 85, 255, 0.12)';
+    ctx.lineWidth = 1;
+    for (let r = 80; r < 200; r += 30) {
+       ctx.beginPath();
+       ctx.arc(cx, cy, r, 0, Math.PI*2);
+       ctx.stroke();
+    }
+
+    if (frame % 10 === 0 && photons.length < 40) {
+       let sy = Math.random() * (canvas.height - 40) + 20;
+       let colorChoices = ['#ffea00', '#00ffcc', '#ff00aa', '#00f6ff'];
+       let col = colorChoices[Math.floor(Math.random() * colorChoices.length)];
+       spawnPhoton(canvas.width + 10, sy, -220, 0, col);
+    }
+
+    if (mouseActive && frame % 4 === 0 && photons.length < 60) {
+       let dx = cx - mouseX;
+       let dy = cy - mouseY;
+       let dist = Math.hypot(dx, dy);
+       if (dist > 30) {
+          let vx = (dx / dist) * 220;
+          let vy = (dy / dist) * 220;
+          spawnPhoton(mouseX, mouseY, vx, vy, '#ffffff');
+       }
+    }
+
+    const dt = 0.016;
+    for (let i = photons.length - 1; i >= 0; i--) {
+       let p = photons[i];
+       let dx = cx - p.x;
+       let dy = cy - p.y;
+       let dist2 = dx * dx + dy * dy;
+       let dist = Math.sqrt(dist2);
+
+       if (dist < eventHorizonR - 2) {
+          createAbsorptionParticles(p.x, p.y, p.color);
+          photons.splice(i, 1);
+          continue;
+       }
+
+       // 1. Inward radial unit vector
+       let ux = dx / dist;
+       let uy = dy / dist;
+
+       // 2. Tangential unit vector in the direction of motion
+       let rx = p.x - cx;
+       let ry = p.y - cy;
+       let cross = rx * p.vy - ry * p.vx;
+       let rot = cross >= 0 ? 1 : -1;
+       let tx = (-ry / dist) * rot;
+       let ty = (rx / dist) * rot;
+
+       // 3. Blend factor based on distance
+       let blend = Math.max(0, Math.min(1, (180 - dist) / 140)); // 0 when far, 1 when close
+
+       // Target direction: blend tangential swirling (75%) with radial pull (25%)
+       let targetVx = tx * 0.75 + ux * 0.25;
+       let targetVy = ty * 0.75 + uy * 0.25;
+
+       // Normalize target direction
+       let targetLen = Math.hypot(targetVx, targetVy);
+       targetVx /= targetLen;
+       targetVy /= targetLen;
+
+       // Adjust velocity: blend current direction with target spiraling direction
+       let blendSpeed = 4 * dt * blend; // gradual steering
+       p.vx = p.vx * (1 - blendSpeed) + targetVx * p.speed * blendSpeed;
+       p.vy = p.vy * (1 - blendSpeed) + targetVy * p.speed * blendSpeed;
+
+       // Force speed of light to remain constant
+       let speed = Math.hypot(p.vx, p.vy);
+       p.vx = (p.vx / speed) * p.speed;
+       p.vy = (p.vy / speed) * p.speed;
+
+       p.x += p.vx * dt;
+       p.y += p.vy * dt;
+
+       p.trail.push({ x: snap(p.x, 2), y: snap(p.y, 2) });
+       if (p.trail.length > 25) p.trail.shift();
+
+       if (p.x < -20 || p.x > canvas.width + 20 || p.y < -20 || p.y > canvas.height + 20) {
+          photons.splice(i, 1);
+          continue;
+       }
+
+       ctx.strokeStyle = p.color;
+       ctx.lineWidth = 2;
+       ctx.beginPath();
+       for (let j = 0; j < p.trail.length; j++) {
+          if (j === 0) ctx.moveTo(p.trail[j].x, p.trail[j].y);
+          else ctx.lineTo(p.trail[j].x, p.trail[j].y);
+       }
+       ctx.stroke();
+
+       drawPixel(ctx, snap(p.x, 2), snap(p.y, 2), 3, '#ffffff');
+    }
+
+    for (let i = absorptionParticles.length - 1; i >= 0; i--) {
+       let ap = absorptionParticles[i];
+       ap.x += ap.vx * dt;
+       ap.y += ap.vy * dt;
+       ap.vx *= 0.9;
+       ap.vy *= 0.9;
+       ap.life -= dt * 2.5;
+
+       if (ap.life <= 0) {
+          absorptionParticles.splice(i, 1);
+       } else {
+          drawPixel(ctx, snap(ap.x, 2), snap(ap.y, 2), 2, ap.color);
+       }
+    }
+
+    ctx.fillStyle = 'rgba(10, 5, 20, 0.4)';
+    ctx.fillRect(cx - eventHorizonR - 8, cy - eventHorizonR - 8, (eventHorizonR + 8) * 2, (eventHorizonR + 8) * 2);
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(cx - eventHorizonR - 4, cy - eventHorizonR - 4, (eventHorizonR + 4) * 2, (eventHorizonR + 4) * 2);
+
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(cx - eventHorizonR, cy - eventHorizonR, eventHorizonR * 2, eventHorizonR * 2);
+
+    ctx.strokeStyle = 'rgba(255, 200, 100, 0.25)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(cx - photonSphereR, cy - photonSphereR, photonSphereR * 2, photonSphereR * 2);
+
+    ctx.strokeStyle = 'rgba(255, 50, 0, 0.4)';
+    ctx.strokeRect(cx - eventHorizonR, cy - eventHorizonR, eventHorizonR * 2, eventHorizonR * 2);
+
+    if (mouseActive) {
+       ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+       ctx.strokeRect(mouseX - 6, mouseY - 6, 12, 12);
     }
 
     requestAnimationFrame(draw);

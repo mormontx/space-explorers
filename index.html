@@ -625,8 +625,15 @@
       </div>
 
       <div class="simulation-container fade-in">
-        <div class="canvas-wrapper">
-          <canvas id="blackhole-canvas" width="800" height="500"></canvas>
+        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+          <div class="canvas-wrapper" style="flex: 1; min-width: 300px; max-width: 48%; margin: 0; border: 2px solid var(--border-pixel); background: rgba(0, 0, 0, 0.65);">
+            <canvas id="blackhole-canvas" width="400" height="350" style="width: 100%; height: auto;"></canvas>
+            <div style="text-align: center; color: var(--pixel-cyan); padding: 12px; font-family: var(--font-heading); font-size: 8px; border-top: 2px solid var(--border-pixel); background: rgba(10, 10, 26, 0.8);">[ ACCRETION DISK & TIME DILATION ]</div>
+          </div>
+          <div class="canvas-wrapper" style="flex: 1; min-width: 300px; max-width: 48%; margin: 0; border: 2px solid var(--border-pixel); background: rgba(0, 0, 0, 0.65); position: relative;">
+            <canvas id="blackhole-lensing-canvas" width="400" height="350" style="width: 100%; height: auto;"></canvas>
+            <div style="text-align: center; color: var(--pixel-yellow); padding: 12px; font-family: var(--font-heading); font-size: 8px; border-top: 2px solid var(--border-pixel); background: rgba(10, 10, 26, 0.8);">[ GRAVITATIONAL LENSING & EVENT HORIZON ]</div>
+          </div>
         </div>
         <div class="stage-info pixel-card">
           <p>A <strong>black hole</strong> forms when a massive star collapses at the end of its life. The gravity is so intense that it warps space and time around it. The boundary around a black hole is called the <strong>event horizon</strong> -- once you cross it, there's no coming back!</p>
