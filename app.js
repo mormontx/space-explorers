@@ -969,7 +969,8 @@ function initBlackHoleLensing() {
       speed: Math.hypot(vx, vy),
       color: color || '#ffea00',
       trail: [],
-      isActive: true
+      isActive: true,
+      isAbsorbed: false
     });
   }
 
@@ -1037,16 +1038,29 @@ function initBlackHoleLensing() {
     const dt = 0.016;
     for (let i = photons.length - 1; i >= 0; i--) {
        let p = photons[i];
+
+       if (p.isAbsorbed) {
+          p.trail.shift();
+          if (p.trail.length === 0) {
+             photons.splice(i, 1);
+             continue;
+          }
+
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          for (let j = 0; j < p.trail.length; j++) {
+             if (j === 0) ctx.moveTo(p.trail[j].x, p.trail[j].y);
+             else ctx.lineTo(p.trail[j].x, p.trail[j].y);
+          }
+          ctx.stroke();
+          continue;
+       }
+
        let dx = cx - p.x;
        let dy = cy - p.y;
        let dist2 = dx * dx + dy * dy;
        let dist = Math.sqrt(dist2);
-
-       if (dist < eventHorizonR - 2) {
-          createAbsorptionParticles(p.x, p.y, p.color);
-          photons.splice(i, 1);
-          continue;
-       }
 
        // 1. Inward radial unit vector
        let ux = dx / dist;
@@ -1060,20 +1074,21 @@ function initBlackHoleLensing() {
        let tx = (-ry / dist) * rot;
        let ty = (rx / dist) * rot;
 
-       // 3. Blend factor based on distance
-       let blend = Math.max(0, Math.min(1, (180 - dist) / 140)); // 0 when far, 1 when close
+       // 3. Blend factor based on distance (start steering at 160px down to 50px)
+       let blend = Math.max(0, Math.min(1, (160 - dist) / 110)); // 0 when far, 1 when close
 
-       // Target direction: blend tangential swirling (75%) with radial pull (25%)
-       let targetVx = tx * 0.75 + ux * 0.25;
-       let targetVy = ty * 0.75 + uy * 0.25;
+       // Target direction: blend tangential swirling (94%) with radial pull (6%) to create a beautiful spiral
+       let targetVx = tx * 0.94 + ux * 0.06;
+       let targetVy = ty * 0.94 + uy * 0.06;
 
        // Normalize target direction
        let targetLen = Math.hypot(targetVx, targetVy);
        targetVx /= targetLen;
        targetVy /= targetLen;
 
-       // Adjust velocity: blend current direction with target spiraling direction
-       let blendSpeed = 4 * dt * blend; // gradual steering
+       // Adjust velocity: blend current direction with target spiraling direction, steering stronger as we get closer
+       let steerStrength = 4 + 16 * blend;
+       let blendSpeed = steerStrength * dt;
        p.vx = p.vx * (1 - blendSpeed) + targetVx * p.speed * blendSpeed;
        p.vy = p.vy * (1 - blendSpeed) + targetVy * p.speed * blendSpeed;
 
@@ -1082,11 +1097,21 @@ function initBlackHoleLensing() {
        p.vx = (p.vx / speed) * p.speed;
        p.vy = (p.vy / speed) * p.speed;
 
+       // Move to new position
        p.x += p.vx * dt;
        p.y += p.vy * dt;
 
+       // Check if new position is inside event horizon
+       let newDist = Math.hypot(cx - p.x, cy - p.y);
+       if (newDist <= eventHorizonR + 1) {
+          createAbsorptionParticles(p.x, p.y, p.color);
+          p.isAbsorbed = true;
+          p.trail.push({ x: snap(p.x, 2), y: snap(p.y, 2) });
+          continue;
+       }
+
        p.trail.push({ x: snap(p.x, 2), y: snap(p.y, 2) });
-       if (p.trail.length > 25) p.trail.shift();
+       if (p.trail.length > 80) p.trail.shift();
 
        if (p.x < -20 || p.x > canvas.width + 20 || p.y < -20 || p.y > canvas.height + 20) {
           photons.splice(i, 1);
@@ -1121,20 +1146,20 @@ function initBlackHoleLensing() {
     }
 
     ctx.fillStyle = 'rgba(10, 5, 20, 0.4)';
-    ctx.fillRect(cx - eventHorizonR - 8, cy - eventHorizonR - 8, (eventHorizonR + 8) * 2, (eventHorizonR + 8) * 2);
+    ctx.beginPath(); ctx.arc(cx, cy, eventHorizonR + 8, 0, Math.PI*2); ctx.fill();
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(cx - eventHorizonR - 4, cy - eventHorizonR - 4, (eventHorizonR + 4) * 2, (eventHorizonR + 4) * 2);
+    ctx.beginPath(); ctx.arc(cx, cy, eventHorizonR + 4, 0, Math.PI*2); ctx.fill();
 
     ctx.fillStyle = '#000000';
-    ctx.fillRect(cx - eventHorizonR, cy - eventHorizonR, eventHorizonR * 2, eventHorizonR * 2);
+    ctx.beginPath(); ctx.arc(cx, cy, eventHorizonR, 0, Math.PI*2); ctx.fill();
 
     ctx.strokeStyle = 'rgba(255, 200, 100, 0.25)';
     ctx.lineWidth = 1;
-    ctx.strokeRect(cx - photonSphereR, cy - photonSphereR, photonSphereR * 2, photonSphereR * 2);
+    ctx.beginPath(); ctx.arc(cx, cy, photonSphereR, 0, Math.PI*2); ctx.stroke();
 
     ctx.strokeStyle = 'rgba(255, 50, 0, 0.4)';
-    ctx.strokeRect(cx - eventHorizonR, cy - eventHorizonR, eventHorizonR * 2, eventHorizonR * 2);
+    ctx.beginPath(); ctx.arc(cx, cy, eventHorizonR, 0, Math.PI*2); ctx.stroke();
 
     if (mouseActive) {
        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
