@@ -1971,6 +1971,7 @@ function initFlightGame() {
     ship.constellationStars = starPath;
     ship.currentStarIndex = 0;
     ship.trail = [];
+    ship.alienSpawnTimer = 0;
   }
 
   let dungeonMap = [];
@@ -2744,7 +2745,24 @@ function initFlightGame() {
                      setTimeout(() => triggerJumpscareAndQuiz(startLevel5), 2000);
                   }
                }
-            }
+             }
+             
+             // Spawn tracking aliens to add challenge
+             if (!ship.alienSpawnTimer) ship.alienSpawnTimer = 0;
+             ship.alienSpawnTimer += dt;
+             if (ship.alienSpawnTimer > 3.0) {
+                ship.alienSpawnTimer = 0;
+                entities.push({
+                   type: 'alien',
+                   x: Math.random() * canvas.width,
+                   y: -20,
+                   size: 15,
+                   hp: 10,
+                   speed: 100, // slightly slower tracking speed for balance
+                   jitterX: Math.random() * 10,
+                   jitterY: Math.random() * 10
+                });
+             }
          } else {
             // Normal movement
             let dx = 0, dy = 0;
@@ -2806,7 +2824,7 @@ function initFlightGame() {
             ship.y = Math.max(20, Math.min(canvas.height - 20, ship.y));
          }
 
-         if (keys[' '] && shootCooldown <= 0 && gameState !== 'LEVEL_3' && gameState !== 'LEVEL_4') {
+          if (keys[' '] && shootCooldown <= 0 && gameState !== 'LEVEL_3') {
             playerLasers.push({ x: ship.x, y: ship.y - 15, size: 5, vx: 0 }); playSound('laser');
             if (ship.powerup === 'spread') {
                playerLasers.push({ x: ship.x, y: ship.y - 15, size: 5, vx: -200 });
