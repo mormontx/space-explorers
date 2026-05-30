@@ -544,7 +544,8 @@ function initOrbitSimulator() {
       temp: '430 C (day) / -180 C (night)',
       age: '4.5 billion years',
       lifespan: '~5 billion more years (until the Sun becomes a red giant and swallows it)',
-      formation: 'Formed from the solar nebula about 4.5 billion years ago. Being closest to the Sun, only heavy metals and silicates could condense here. It lost most of its lighter materials to solar wind early in its life.'
+      formation: 'Formed from the solar nebula about 4.5 billion years ago. Being closest to the Sun, only heavy metals and silicates could condense here. It lost most of its lighter materials to solar wind early in its life.',
+      moons: []
     },
     {
       name: 'VENUS', orbit: 75, size: 4, speed: 0.03, color: '#e8c77b',
@@ -553,7 +554,8 @@ function initOrbitSimulator() {
       temp: '465 C (hottest planet!)',
       age: '4.5 billion years',
       lifespan: '~5 billion more years (consumed when the Sun expands)',
-      formation: 'Formed similarly to Earth from rocky debris in the inner solar system. A runaway greenhouse effect caused by thick CO2 atmosphere trapped heat, making it even hotter than Mercury despite being further from the Sun.'
+      formation: 'Formed similarly to Earth from rocky debris in the inner solar system. A runaway greenhouse effect caused by thick CO2 atmosphere trapped heat, making it even hotter than Mercury despite being further from the Sun.',
+      moons: []
     },
     {
       name: 'EARTH', orbit: 105, size: 5, speed: 0.025, color: '#3388ff',
@@ -562,7 +564,13 @@ function initOrbitSimulator() {
       temp: '15 C (average)',
       age: '4.54 billion years',
       lifespan: '~5 billion more years (oceans boil in ~1 billion years as the Sun brightens)',
-      formation: 'Accreted from planetesimals in the habitable zone. A giant impact with a Mars-sized body (Theia) created the Moon about 4.5 billion years ago. Liquid water appeared within the first few hundred million years.'
+      formation: 'Accreted from planetesimals in the habitable zone. A giant impact with a Mars-sized body (Theia) created the Moon about 4.5 billion years ago. Liquid water appeared within the first few hundred million years.',
+      moons: [
+        { name: 'THE MOON', orbit: 10, speed: 0.06, angle: Math.random() * Math.PI * 2, color: '#dddddd', size: 2,
+          type: 'Natural Satellite', temp: '127 C (day) / -173 C (night)', age: '4.51 billion years',
+          lifespan: 'Moving away from Earth at 3.8 cm per year — eventually it will be too far for total solar eclipses!',
+          formation: 'Created when a Mars-sized body called Theia slammed into early Earth. The debris from this giant impact coalesced in orbit to form our Moon. It is the only other world humans have walked on.' }
+      ]
     },
     {
       name: 'MARS', orbit: 135, size: 4, speed: 0.02, color: '#cc4422',
@@ -571,7 +579,17 @@ function initOrbitSimulator() {
       temp: '-65 C (average)',
       age: '4.6 billion years',
       lifespan: '~5 billion more years (may survive the Sun\'s red giant phase)',
-      formation: 'Formed from rocky material at the outer edge of the inner solar system. Jupiter\'s gravity starved Mars of building material, keeping it small. It once had a thicker atmosphere and liquid water on its surface.'
+      formation: 'Formed from rocky material at the outer edge of the inner solar system. Jupiter\'s gravity starved Mars of building material, keeping it small. It once had a thicker atmosphere and liquid water on its surface.',
+      moons: [
+        { name: 'PHOBOS', orbit: 8, speed: 0.08, angle: Math.random() * Math.PI * 2, color: '#aaaaaa', size: 1,
+          type: 'Captured Asteroid', temp: '-40 C', age: '4.5 billion years',
+          lifespan: 'Will crash into Mars in about 50 million years or break apart into a ring!',
+          formation: 'Likely a captured asteroid from the nearby asteroid belt. It orbits Mars faster than Mars rotates, meaning it rises in the west and sets in the east! Only 22 km across.' },
+        { name: 'DEIMOS', orbit: 12, speed: 0.05, angle: Math.random() * Math.PI * 2, color: '#888888', size: 1,
+          type: 'Captured Asteroid', temp: '-40 C', age: '4.5 billion years',
+          lifespan: 'Slowly spiralling away from Mars — may eventually escape its orbit entirely.',
+          formation: 'The smaller of Mars\' two moons, only 12 km across. Like Phobos, it is likely a captured asteroid. It takes 30 hours to orbit Mars.' }
+      ]
     },
     {
       name: 'JUPITER', orbit: 185, size: 10, speed: 0.012, color: '#cc9966',
@@ -580,7 +598,25 @@ function initOrbitSimulator() {
       temp: '-110 C (cloud tops)',
       age: '4.6 billion years',
       lifespan: 'Billions of years beyond our Sun (will drift as a rogue planet after the Sun dies)',
-      formation: 'First planet to form! Its rocky core grew large enough (10x Earth) to gravitationally capture massive amounts of hydrogen and helium gas from the solar nebula. It contains more mass than all other planets combined.'
+      formation: 'First planet to form! Its rocky core grew large enough (10x Earth) to gravitationally capture massive amounts of hydrogen and helium gas from the solar nebula. It contains more mass than all other planets combined.',
+      moons: [
+        { name: 'IO', orbit: 16, speed: 0.045, angle: Math.random() * Math.PI * 2, color: '#ffee55', size: 2,
+          type: 'Volcanic Moon', temp: '-130 C (surface) / 1,600 C (volcanoes)', age: '4.5 billion years',
+          lifespan: 'Stable for billions of years but constantly resurfaced by volcanic eruptions.',
+          formation: 'The most volcanically active body in the solar system! Jupiter\'s immense gravity squeezes and stretches Io through tidal heating, powering over 400 active volcanoes that shoot plumes 300 km high.' },
+        { name: 'EUROPA', orbit: 20, speed: 0.035, angle: Math.random() * Math.PI * 2, color: '#ffddbb', size: 2,
+          type: 'Ice Moon', temp: '-160 C (surface)', age: '4.5 billion years',
+          lifespan: 'Its subsurface ocean could persist for billions of years, fuelled by tidal heating.',
+          formation: 'Has a smooth ice shell hiding a salty ocean that contains more water than all of Earth\'s oceans combined! Tidal heating from Jupiter keeps the water liquid. One of the best candidates for alien life in our solar system.' },
+        { name: 'GANYMEDE', orbit: 24, speed: 0.025, angle: Math.random() * Math.PI * 2, color: '#aaddff', size: 1,
+          type: 'Ice/Rock Moon', temp: '-160 C', age: '4.5 billion years',
+          lifespan: 'Billions of years — gravitationally stable in its orbit.',
+          formation: 'The largest moon in the entire solar system — bigger than the planet Mercury! It is the only moon known to have its own magnetic field. Has a subsurface ocean sandwiched between layers of ice.' },
+        { name: 'CALLISTO', orbit: 28, speed: 0.018, angle: Math.random() * Math.PI * 2, color: '#d8bfd8', size: 1,
+          type: 'Ice/Rock Moon', temp: '-139 C', age: '4.5 billion years',
+          lifespan: 'Billions of years — the most stable of the Galilean moons.',
+          formation: 'The most heavily cratered object in the solar system — its surface has barely changed in 4 billion years! May have a subsurface ocean. A potential base for future human exploration of Jupiter\'s system.' }
+      ]
     },
     {
       name: 'SATURN', orbit: 230, size: 8, speed: 0.009, color: '#ddcc88',
@@ -589,7 +625,17 @@ function initOrbitSimulator() {
       temp: '-140 C (cloud tops)',
       age: '4.5 billion years',
       lifespan: 'Billions of years beyond our Sun (rings may disappear in ~100 million years)',
-      formation: 'Formed similarly to Jupiter but further out where there was less material. Its famous rings are made of ice and rock, possibly from a destroyed moon or captured comet. Saturn is so light it would float in water!'
+      formation: 'Formed similarly to Jupiter but further out where there was less material. Its famous rings are made of ice and rock, possibly from a destroyed moon or captured comet. Saturn is so light it would float in water!',
+      moons: [
+        { name: 'TITAN', orbit: 15, speed: 0.04, angle: Math.random() * Math.PI * 2, color: '#ffcc66', size: 2,
+          type: 'Atmospheric Moon', temp: '-179 C', age: '~4.5 billion years',
+          lifespan: 'Billions of years — its thick atmosphere protects the surface.',
+          formation: 'The only moon in the solar system with a thick atmosphere (1.5x Earth\'s pressure!). Has lakes and rivers of liquid methane and ethane on its surface. Rain falls from orange skies. The Huygens probe landed here in 2005!' },
+        { name: 'ENCELADUS', orbit: 21, speed: 0.03, angle: Math.random() * Math.PI * 2, color: '#ffffff', size: 1.5,
+          type: 'Icy Geyser Moon', temp: '-201 C (surface)', age: '~4.5 billion years',
+          lifespan: 'Its geysers may continue for millions of years, powered by tidal heating.',
+          formation: 'A tiny moon with enormous geysers that shoot water ice into space from cracks near its south pole! The Cassini spacecraft flew through these plumes and detected organic molecules — another top candidate for life!' }
+      ]
     },
     {
       name: 'URANUS', orbit: 265, size: 6, speed: 0.006, color: '#66aaaa',
@@ -598,7 +644,17 @@ function initOrbitSimulator() {
       temp: '-195 C (coldest atmosphere)',
       age: '4.5 billion years',
       lifespan: 'Billions of years beyond our Sun (will become a rogue ice giant)',
-      formation: 'Formed closer to the Sun then migrated outward. A massive collision knocked it on its side -- it rotates at a 98-degree tilt! Made mostly of water, methane, and ammonia ices. Methane gives it its blue-green color.'
+      formation: 'Formed closer to the Sun then migrated outward. A massive collision knocked it on its side -- it rotates at a 98-degree tilt! Made mostly of water, methane, and ammonia ices. Methane gives it its blue-green color.',
+      moons: [
+        { name: 'TITANIA', orbit: 12, speed: 0.035, angle: Math.random() * Math.PI * 2, color: '#e0ffff', size: 1.5,
+          type: 'Icy Moon', temp: '-203 C', age: '~4.5 billion years',
+          lifespan: 'Billions of years — gravitationally bound to Uranus.',
+          formation: 'The largest moon of Uranus, named after the queen of fairies in Shakespeare\'s A Midsummer Night\'s Dream. Its surface shows enormous canyons up to 1,500 km long. May have a thin subsurface ocean.' },
+        { name: 'MIRANDA', orbit: 16, speed: 0.025, angle: Math.random() * Math.PI * 2, color: '#ffffff', size: 1,
+          type: 'Icy Moon', temp: '-187 C', age: '~4.5 billion years',
+          lifespan: 'Billions of years.',
+          formation: 'The strangest looking moon — its surface looks like it was shattered and reassembled! Has the tallest cliff in the solar system: Verona Rupes, a 20 km drop. Named after a character from Shakespeare\'s The Tempest.' }
+      ]
     },
     {
       name: 'NEPTUNE', orbit: 295, size: 6, speed: 0.005, color: '#3355cc',
@@ -607,7 +663,17 @@ function initOrbitSimulator() {
       temp: '-200 C',
       age: '4.5 billion years',
       lifespan: 'Billions of years beyond our Sun (will become a rogue ice giant)',
-      formation: 'The most distant planet, likely formed closer to the Sun and migrated outward. Has the strongest winds in the solar system (2,100 km/h). It rains diamonds deep in its atmosphere due to extreme pressure on carbon.'
+      formation: 'The most distant planet, likely formed closer to the Sun and migrated outward. Has the strongest winds in the solar system (2,100 km/h). It rains diamonds deep in its atmosphere due to extreme pressure on carbon.',
+      moons: [
+        { name: 'TRITON', orbit: 12, speed: 0.032, angle: Math.random() * Math.PI * 2, color: '#ffffff', size: 2,
+          type: 'Captured Dwarf Planet', temp: '-235 C (coldest surface in the solar system!)', age: '~4.5 billion years',
+          lifespan: 'Will spiral into Neptune and be torn apart in about 3.6 billion years, possibly forming a ring.',
+          formation: 'The only large moon that orbits its planet backwards (retrograde)! This means it was captured from the Kuiper Belt — it was once a dwarf planet like Pluto. Has active geysers that shoot nitrogen gas 8 km high.' },
+        { name: 'PROTEUS', orbit: 16, speed: 0.022, angle: Math.random() * Math.PI * 2, color: '#aaddff', size: 1,
+          type: 'Irregular Moon', temp: '-222 C', age: '~4.5 billion years',
+          lifespan: 'Billions of years.',
+          formation: 'One of the darkest objects in the solar system — it reflects very little sunlight. It is nearly as large as a sphere can get before gravity forces it into a round shape. Discovered by Voyager 2 in 1989.' }
+      ]
     }
   ];
 
@@ -619,6 +685,13 @@ function initOrbitSimulator() {
   let selectedPlanet = null;
   let frame = 0;
 
+  // Helper: find current position of a moon (needs its parent planet position)
+  function getMoonPos(p, m) {
+    const px = cx + Math.cos(p.angle) * p.orbit;
+    const py = cy + Math.sin(p.angle) * p.orbit;
+    return { x: px + Math.cos(m.angle) * m.orbit, y: py + Math.sin(m.angle) * m.orbit };
+  }
+
   // Mouse tracking for hover
   canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
@@ -628,16 +701,30 @@ function initOrbitSimulator() {
     const my = (e.clientY - rect.top) * scaleY;
 
     hoveredPlanet = null;
-    if (Math.abs(mx - cx) < 26 && Math.abs(my - cy) < 26) {
-      hoveredPlanet = sunObj;
-    } else {
-      planets.forEach(p => {
-        const px = cx + Math.cos(p.angle) * p.orbit;
-        const py = cy + Math.sin(p.angle) * p.orbit;
-        if (Math.abs(mx - px) < p.size + 6 && Math.abs(my - py) < p.size + 6) {
-          hoveredPlanet = p;
+    // Check moons first (smaller targets, higher priority)
+    for (const p of planets) {
+      if (p.moons) {
+        for (const m of p.moons) {
+          const mp = getMoonPos(p, m);
+          if (Math.abs(mx - mp.x) < m.size + 5 && Math.abs(my - mp.y) < m.size + 5) {
+            hoveredPlanet = m;
+          }
         }
-      });
+      }
+    }
+    // Then planets
+    if (!hoveredPlanet) {
+      if (Math.abs(mx - cx) < 26 && Math.abs(my - cy) < 26) {
+        hoveredPlanet = sunObj;
+      } else {
+        planets.forEach(p => {
+          const px = cx + Math.cos(p.angle) * p.orbit;
+          const py = cy + Math.sin(p.angle) * p.orbit;
+          if (Math.abs(mx - px) < p.size + 6 && Math.abs(my - py) < p.size + 6) {
+            hoveredPlanet = p;
+          }
+        });
+      }
     }
     canvas.style.cursor = hoveredPlanet ? 'pointer' : 'default';
   });
@@ -650,26 +737,40 @@ function initOrbitSimulator() {
     const mx = (e.clientX - rect.left) * scaleX;
     const my = (e.clientY - rect.top) * scaleY;
 
-    let clickedPlanet = null;
-    if (Math.abs(mx - cx) < 28 && Math.abs(my - cy) < 28) {
-      clickedPlanet = sunObj;
-    } else {
-      planets.forEach(p => {
-        const px = cx + Math.cos(p.angle) * p.orbit;
-        const py = cy + Math.sin(p.angle) * p.orbit;
-        if (Math.abs(mx - px) < p.size + 8 && Math.abs(my - py) < p.size + 8) {
-          clickedPlanet = p;
+    let clickedObj = null;
+    // Check moons first (smaller targets, higher priority)
+    for (const p of planets) {
+      if (p.moons) {
+        for (const m of p.moons) {
+          const mp = getMoonPos(p, m);
+          if (Math.abs(mx - mp.x) < m.size + 6 && Math.abs(my - mp.y) < m.size + 6) {
+            clickedObj = m;
+          }
         }
-      });
+      }
+    }
+    // Then planets & sun
+    if (!clickedObj) {
+      if (Math.abs(mx - cx) < 28 && Math.abs(my - cy) < 28) {
+        clickedObj = sunObj;
+      } else {
+        planets.forEach(p => {
+          const px = cx + Math.cos(p.angle) * p.orbit;
+          const py = cy + Math.sin(p.angle) * p.orbit;
+          if (Math.abs(mx - px) < p.size + 8 && Math.abs(my - py) < p.size + 8) {
+            clickedObj = p;
+          }
+        });
+      }
     }
 
-    if (clickedPlanet) {
-      // Toggle: clicking same planet again closes the panel
-      if (selectedPlanet === clickedPlanet) {
+    if (clickedObj) {
+      // Toggle: clicking same object again closes the panel
+      if (selectedPlanet === clickedObj) {
         closeInfoPanel();
       } else {
-        selectedPlanet = clickedPlanet;
-        showPlanetInfo(clickedPlanet);
+        selectedPlanet = clickedObj;
+        showPlanetInfo(clickedObj);
       }
     }
   });
@@ -714,12 +815,7 @@ function initOrbitSimulator() {
     });
 
     planets.forEach(p => {
-      // Orbit path — dashed pixel dots
-      for (let a = 0; a < Math.PI * 2; a += 0.15) {
-        const ox = cx + Math.cos(a) * p.orbit;
-        const oy = cy + Math.sin(a) * p.orbit;
-        drawPixel(ctx, snap(ox, 2), snap(oy, 2), 1, 'rgba(255, 255, 255, 0.06)');
-      }
+
 
       p.angle += p.speed * speedMultiplier;
       const px = Math.round(cx + Math.cos(p.angle) * p.orbit);
@@ -733,6 +829,41 @@ function initOrbitSimulator() {
       if (p.ring) {
         ctx.fillStyle = 'rgba(221, 204, 136, 0.5)';
         ctx.fillRect(px - p.size - 6, py - 1, (p.size + 6) * 2, 2);
+      }
+
+      // Moons — little pixels orbiting the planet
+      if (p.moons) {
+        p.moons.forEach(m => {
+          m.angle += m.speed * speedMultiplier;
+          const mxPos = Math.round(px + Math.cos(m.angle) * m.orbit);
+          const myPos = Math.round(py + Math.sin(m.angle) * m.orbit);
+          ctx.fillStyle = m.color;
+          ctx.fillRect(mxPos - Math.floor(m.size/2), myPos - Math.floor(m.size/2), m.size, m.size);
+
+          // Selected moon — blinking highlight
+          if (selectedPlanet === m) {
+            const blinkOn = Math.floor(frame / 12) % 2 === 0;
+            if (blinkOn) {
+              ctx.strokeStyle = '#ffff00';
+              ctx.lineWidth = 1;
+              ctx.strokeRect(mxPos - 4, myPos - 4, 8, 8);
+            }
+            ctx.fillStyle = '#ffff00';
+            ctx.font = '8px "Press Start 2P", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(m.name, mxPos, myPos - 8);
+          }
+          // Hovered moon label
+          else if (hoveredPlanet === m) {
+            ctx.strokeStyle = '#00e5ff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(mxPos - 4, myPos - 4, 8, 8);
+            ctx.fillStyle = '#00e5ff';
+            ctx.font = '8px "Press Start 2P", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(m.name, mxPos, myPos - 8);
+          }
+        });
       }
 
       // Selected planet — blinking highlight box
