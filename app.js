@@ -681,6 +681,16 @@ function initOrbitSimulator() {
     name: 'THE SUN', type: 'Yellow Dwarf Star', temp: '5,500 C (surface)', age: '4.6 billion years', lifespan: '~5 billion more years', formation: 'Born from a giant rotating cloud of gas and dust known as the solar nebula. Gravity pulled the material together into a dense core, igniting nuclear fusion.', color: '#ffdd44'
   };
 
+  const asteroidBeltObj = {
+    name: 'ASTEROID BELT',
+    type: 'Circumstellar Disc of Debris',
+    temp: '-73 C to -108 C (average)',
+    age: '4.5 billion years',
+    lifespan: 'Billions of years (stable orbit, though individual collisions occur constantly)',
+    formation: 'Made of rocky and metallic leftovers from the solar system\'s formation. Jupiter\'s massive gravitational influence prevented these planetesimals from coalescing into a single planet, leaving them as a belt of individual bodies. It contains dwarf planets like Ceres!',
+    color: '#7f7f7f'
+  };
+
   // Swirling Asteroid Belt particles (between Mars and Jupiter)
   const asteroidBelt = [];
   const ASTEROID_COUNT = 150;
@@ -741,6 +751,13 @@ function initOrbitSimulator() {
         });
       }
     }
+    // Finally, check asteroid belt
+    if (!hoveredPlanet) {
+      const distFromSun = Math.hypot(mx - cx, my - cy);
+      if (distFromSun >= 147 && distFromSun <= 173) {
+        hoveredPlanet = asteroidBeltObj;
+      }
+    }
     canvas.style.cursor = hoveredPlanet ? 'pointer' : 'default';
   });
 
@@ -776,6 +793,13 @@ function initOrbitSimulator() {
             clickedObj = p;
           }
         });
+      }
+    }
+    // Finally, check asteroid belt
+    if (!clickedObj) {
+      const distFromSun = Math.hypot(mx - cx, my - cy);
+      if (distFromSun >= 147 && distFromSun <= 173) {
+        clickedObj = asteroidBeltObj;
       }
     }
 
@@ -837,6 +861,39 @@ function initOrbitSimulator() {
       ctx.fillStyle = ast.color;
       ctx.fillRect(Math.round(ax - ast.size / 2), Math.round(ay - ast.size / 2), ast.size, ast.size);
     });
+
+    // Highlight Asteroid Belt if selected or hovered
+    if (selectedPlanet === asteroidBeltObj) {
+      const blinkOn = Math.floor(frame / 12) % 2 === 0;
+      if (blinkOn) {
+        ctx.strokeStyle = '#ffff00';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 147, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(cx, cy, 173, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#ffff00';
+      ctx.font = '10px "Press Start 2P", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('ASTEROID BELT', cx, cy - 182);
+    } else if (hoveredPlanet === asteroidBeltObj) {
+      ctx.strokeStyle = '#00e5ff';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 147, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx, cy, 173, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#00e5ff';
+      ctx.font = '10px "Press Start 2P", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('ASTEROID BELT', cx, cy - 182);
+    }
 
     planets.forEach(p => {
 
