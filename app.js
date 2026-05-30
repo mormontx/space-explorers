@@ -681,6 +681,21 @@ function initOrbitSimulator() {
     name: 'THE SUN', type: 'Yellow Dwarf Star', temp: '5,500 C (surface)', age: '4.6 billion years', lifespan: '~5 billion more years', formation: 'Born from a giant rotating cloud of gas and dust known as the solar nebula. Gravity pulled the material together into a dense core, igniting nuclear fusion.', color: '#ffdd44'
   };
 
+  // Swirling Asteroid Belt particles (between Mars and Jupiter)
+  const asteroidBelt = [];
+  const ASTEROID_COUNT = 150;
+  for (let i = 0; i < ASTEROID_COUNT; i++) {
+    // Distance between Mars (135) and Jupiter (185) -> roughly 150 to 170
+    const orbitDist = 150 + Math.random() * 20; 
+    asteroidBelt.push({
+      orbit: orbitDist,
+      angle: Math.random() * Math.PI * 2,
+      speed: (0.015 / Math.sqrt(orbitDist / 150)) * (0.8 + Math.random() * 0.4),
+      size: Math.random() > 0.8 ? 2 : 1, // 1x1 or 2x2 pixels
+      color: Math.random() > 0.5 ? '#7f7f7f' : '#a9a9a9' // Slate/Grey rock colors
+    });
+  }
+
   let hoveredPlanet = null;
   let selectedPlanet = null;
   let frame = 0;
@@ -812,6 +827,15 @@ function initOrbitSimulator() {
     sunLayers.forEach(l => {
       ctx.fillStyle = l.c;
       ctx.fillRect(cx - l.s, cy - l.s, l.s * 2, l.s * 2);
+    });
+
+    // Draw swirling Asteroid Belt
+    asteroidBelt.forEach(ast => {
+      ast.angle += ast.speed * speedMultiplier;
+      const ax = cx + Math.cos(ast.angle) * ast.orbit;
+      const ay = cy + Math.sin(ast.angle) * ast.orbit;
+      ctx.fillStyle = ast.color;
+      ctx.fillRect(Math.round(ax - ast.size / 2), Math.round(ay - ast.size / 2), ast.size, ast.size);
     });
 
     planets.forEach(p => {
@@ -1803,6 +1827,13 @@ function initFlightGame() {
 
   const jumpscareOverlay = document.getElementById('jumpscare-overlay');
   
+  // Preload jumpscare images to avoid blank screens during trigger
+  const jumpscareImagesList = ['assets/jumpscare.png', 'assets/jumpscare_grey.png', 'assets/jumpscare_nordic.png', 'assets/jumpscare_mantis.png', 'assets/jumpscare_reptilian.png', 'assets/jumpscare_cybernetic.png', 'assets/jumpscare_deepsea.png', 'assets/jumpscare_shadow.png', 'assets/jumpscare_crystal.png'];
+  jumpscareImagesList.forEach(src => {
+     const img = new Image();
+     img.src = src;
+  });
+  
   const quizModal = document.getElementById('flight-quiz-modal');
   const quizTitle = document.getElementById('flight-quiz-title');
   const quizText = document.getElementById('flight-quiz-text');
@@ -2182,10 +2213,13 @@ function initFlightGame() {
     lastJumpscareImage = chosen;
     
     const imgEl = jumpscareOverlay.querySelector('img');
-    if (imgEl) imgEl.src = chosen;
+    if (imgEl) {
+      imgEl.src = chosen;
+      jumpscareOverlay.style.display = 'flex';
+      jumpscareOverlay.hidden = false;
+    }
     
-    jumpscareOverlay.hidden = false;
-    setTimeout(() => openQuizModal(false), 800);
+    setTimeout(() => openQuizModal(false), 1000); // 1000ms gives slightly more time to see the face
   }
   
   function triggerTriviaPowerup() {
@@ -2215,6 +2249,7 @@ function initFlightGame() {
 
   function openQuizModal(isPowerup) {
     jumpscareOverlay.hidden = true;
+    jumpscareOverlay.style.display = 'none';
     gameState = 'QUIZ';
     const qObj = currentQuestions.pop() || questionPool[0];
     quizTitle.textContent = isPowerup ? "DATA CUBE: TRIVIA POWER-UP!" : "COSMIC PUZZLE";
